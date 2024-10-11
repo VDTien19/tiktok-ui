@@ -100,3 +100,17 @@
         background-color: rgba(22, 24, 35, 0.09);
     }
 }
+
+.actions {
+    display: flex;
+    align-items: center;
+}
+
+.more-btn {
+    cursor: pointer;
+    font-size: 2rem;
+    margin-left: 24px;
+    background: transparent;
+    padding: 4px 8px;
+}
+
