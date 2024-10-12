@@ -26,6 +26,77 @@ const MENU_ITEMS = [
     {
         icon: <FontAwesomeIcon icon={faGlobe} />,
         title: 'Tiếng Việt',
+        children: {
+            title: "Language",
+            data: [
+                {
+                    type: 'language',
+                    code: 'en',
+                    title: 'English', // United States, Canada, Australia, etc.
+                },
+                {
+                    type: 'language',
+                    code: 'vi',
+                    title: 'Tiếng Việt', // Vietnam
+                    // children: {
+                    //     title: 'Language',
+                    //     data: [
+                    //         {
+                    //             code: 'vi-1',
+                    //             title: 'Tiếng Việt 1'
+                    //         },
+                    //         {
+                    //             code: 'vi-2',
+                    //             title: 'Tiếng Việt 2',
+                    //             children: {
+                    //                 title: 'Language',
+                    //                 data: [
+                    //                     {
+                    //                         code: 'vi-1',
+                    //                         title: 'Tiếng Việt 2-1'
+                    //                     },
+                    //                     {
+                    //                         code: 'vi-2',
+                    //                         title: 'Tiếng Việt 2-2'
+                    //                     },
+                    //                 ]
+                    //             }
+                    //         },
+                    //     ]
+                    // }
+                },
+                {
+                    type: 'language',
+                    code: 'fi',
+                    title: 'Suomi', // Finland
+                },
+                {
+                    type: 'language',
+                    code: 'no',
+                    title: 'Norsk', // Norway
+                },
+                {
+                    type: 'language',
+                    code: 'se',
+                    title: 'Svenska', // Sweden
+                },
+                {
+                    type: 'language',
+                    code: 'dk',
+                    title: 'Dansk', // Denmark
+                },
+                {
+                    type: 'language',
+                    code: 'ch',
+                    title: 'Schweizerdeutsch', // Switzerland (Swiss German)
+                },
+                {
+                    type: 'language',
+                    code: 'nl',
+                    title: 'Nederlands', // Netherlands
+                },
+            ]
+        }
     },
     {
         icon: <FontAwesomeIcon icon={faCircleQuestion} />,
@@ -46,6 +117,18 @@ function Header() {
             setSearchResult([]);
         }, 0);
     }, []);
+
+    // Handle logic
+    const handleChangeMenu = (menuItem) => {
+        // console.log(menuItem);
+        switch(menuItem.type) {
+            case 'language':
+                // Handle change language
+                break;
+            default:
+
+        }
+    }
 
     return (
         <header className={cx('wrapper')}>
@@ -96,7 +179,7 @@ function Header() {
                     <Button text>Upload</Button>
                     <Button primary>Log in</Button>
 
-                    <Menu items={MENU_ITEMS}>
+                    <Menu items={MENU_ITEMS} onChange={handleChangeMenu} >
                         <button className={cx('more-btn')}>
                             <FontAwesomeIcon icon={faEllipsisVertical} />
                         </button>
