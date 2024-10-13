@@ -105,6 +105,15 @@
 .actions {
     display: flex;
     align-items: center;
+    
+}
+
+.action-btn {
+    cursor: pointer;
+    color: #161823;
+    background: transparent;
+    font-size: 2.2rem;
+    padding: 4px 12px;
 }
 
 .more-btn {
@@ -115,3 +124,11 @@
     padding: 4px 8px;
 }
 
+.user-avatar {
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 16px;
+}
