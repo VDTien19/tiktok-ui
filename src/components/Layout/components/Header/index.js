@@ -4,14 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCircleQuestion,
     faCircleXmark,
-    faCloudUpload,
     faCoins,
     faEllipsisVertical,
     faGear,
     faGlobe,
     faKeyboard,
     faMagnifyingGlass,
-    faPaperPlane,
     faSignOut,
     faSpinner,
     faUser,
@@ -26,6 +24,9 @@ import images from '~/assets/images';
 import AccountItem from '../../../AccountItem';
 import Button from '~/components/Button';
 import Menu from '~/components/Popper/Menu';
+import { MessageIcon, UploadIcon } from '~/components/Icons';
+import Image from '~/components/Images'
+
 
 // classname có thể viết '-'
 const cx = classNames.bind(styles);
@@ -214,12 +215,12 @@ function Header() {
                     {currentUser ? (
                         <>
                             <Tippy content="Upload video" placement='bottom'>
-                                <button>
-                                    <FontAwesomeIcon className={cx('action-btn')} icon={faCloudUpload} />
+                                <button className={cx('action-btn')}>
+                                    <UploadIcon className={cx('upload-icon')} />
                                 </button>
                             </Tippy>
-                            <button>
-                                <FontAwesomeIcon className={cx('action-btn')} icon={faPaperPlane} />
+                            <button className={cx('action-btn')}>
+                                <MessageIcon className={cx('message-icon')} width='2.4rem' height='2.4rem' />
                             </button>
                         </>
                     ) : (
@@ -231,10 +232,11 @@ function Header() {
 
                     <Menu items={currentUser ? USER_MENU : MENU_ITEMS} onChange={handleChangeMenu}>
                         {currentUser ? (
-                            <img
-                                src="https://scontent.fhph2-1.fna.fbcdn.net/v/t39.30808-6/433135275_1450921095831335_5022358092751087662_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHIxA9Z89oOZCqUTZdL-_3uTtNRzzeO5KBO01HPN47koHoA2-EpSKqte3uZJ3XrU7fm8aRK6ByG0DXylA0ypezT&_nc_ohc=DO3J2N_lQlsQ7kNvgGlDVzo&_nc_ht=scontent.fhph2-1.fna&_nc_gid=AejWfiZJ-YGJJvVnUB99mOq&oh=00_AYBe1AiuqyFdvOD72-AlygnGYmhBRtYaTD2y1GFIp9PbvA&oe=670D725C"
+                            <Image
+                                src="https://scontent.fhan3-2.fna.fbcdn.net/v/t39.30808-6/441510897_1485238849066226_7390159272317637928_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH_qkO8Ptt1hqtIVvhqQ-LdbsogqlNzjHNuyiCqU3OMc0T1n1ck94blkUITMx3RjyIOwxar1Aqr-kE88iil2uWf&_nc_ohc=s5PrlNnUd_AQ7kNvgHmpLvQ&_nc_zt=23&_nc_ht=scontent.fhan3-2.fna&_nc_gid=ACanW4k9tfF8IOiy9sDGNKX&oh=00_AYAUZoalGliyPJ-XCt0TW6CkQ2foaIn848OaF8cs5frYyA&oe=67145FF9"
                                 alt="Nguyễn Thùy Dương"
                                 className={cx('user-avatar')}
+                                fallback='https://scontent.fhph1-2.fna.fbcdn.net/v/t39.30808-6/462716938_1063431158555320_3980149353593334452_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHCcrNBzjLZ62GnDF6e5j0wcKkEniPo_4BwqQSeI-j_gLi8LbBzEscgbcpluaiwbwrULZS99JtCnTwBNzwuN-gv&_nc_ohc=vCEc0Iw0oPwQ7kNvgGauAUn&_nc_ht=scontent.fhph1-2.fna&_nc_gid=AKKxE-S48SskLkbUgNAaucm&oh=00_AYA4PbhsDTdJlZvmAKfabgNlufBgJo31wMIbBnQUP0aenA&oe=6716B9E3'
                             />
                         ) : (
                             <button className={cx('more-btn')}>
