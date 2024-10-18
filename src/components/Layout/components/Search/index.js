@@ -15,24 +15,43 @@ function Search() {
     const [searchResult, setSearchResult] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [showResult, setShowResult] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const inputRef = useRef();
 
     useEffect(() => {
-        setTimeout(() => {
-            setSearchResult([1]);
-        }, 0);
-    }, []);
+        if (!searchValue) {
+            setSearchResult([]) // Xóa kết quả tìm kiếm khi xóa ký tự tìm kiếm
+            return
+        };   
+        // .trim() để bỏ khoảng trắng đầu cuối để khi gõ dấu cách không bị gửi request
+        // Khi mới đầu vào app thì searchValue='' mà api yêu cầu search?q= là require nên sẽ lỗi 
+        // => Kiểm tra nếu không có searchValue thì return để thoát ra khỏi hàm
+
+        setLoading(true)
+
+        fetch(
+            `https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(searchValue)}&type=less`,
+        )
+            .then((res) => res.json())
+            .then((res) => {
+                setSearchResult(res.data)
+                setLoading(false)
+            })
+            .catch(() => {
+                setLoading(false)
+            });
+    }, [searchValue]);
 
     const handleClear = () => {
         setSearchValue('');
-        setSearchResult([])
+        setSearchResult([]);
         inputRef.current.focus();
     };
 
     const handleHide = () => {
-        setShowResult(false)
-    }
+        setShowResult(false);
+    };
 
     return (
         <HeadlessTippy
@@ -42,10 +61,9 @@ function Search() {
                 <div className={cx('search-result')} tabIndex="-1" {...attrs}>
                     <PopperWrapper>
                         <h4 className={cx('search-title')}>Accounts</h4>
-                        <AccountItem />
-                        <AccountItem />
-                        <AccountItem />
-                        <AccountItem />
+                        {searchResult.map((result) => (
+                            <AccountItem key={result.id} data={result} />
+                        ))}
                     </PopperWrapper>
                 </div>
             )}
@@ -58,18 +76,23 @@ function Search() {
                     type="text"
                     placeholder="Search accounts and videos"
                     spellCheck={false}
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    onChange={(e) => {
+                        e.target.value = e.target.value.trimStart()
+                        setSearchValue(e.target.value)
+                    }}
                     onFocus={() => setShowResult(true)}
                 />
-                {!!searchValue && (
+                {!!searchValue && !loading && (
                     <button className={cx('clear')} onClick={handleClear}>
                         <FontAwesomeIcon icon={faCircleXmark} />
                     </button>
                 )}
-                {/* <FontAwesomeIcon
-                    className={cx('loading')}
-                    icon={faSpinner}
-                /> */}
+                {loading && (
+                    <FontAwesomeIcon
+                        className={cx('loading')}
+                        icon={faSpinner}
+                    />
+                )}
                 <button className={cx('search-btn')}>
                     <SearchIcon />
                 </button>
