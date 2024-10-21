@@ -187,7 +187,7 @@ function Header() {
                     <Menu items={currentUser ? USER_MENU : MENU_ITEMS} onChange={handleChangeMenu}>
                         {currentUser ? (
                             <Image
-                                src="https://scontent.fhan3-2.fna.fbcdn.net/v/t39.30808-6/441510897_1485238849066226_7390159272317637928_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH_qkO8Ptt1hqtIVvhqQ-LdbsogqlNzjHNuyiCqU3OMc0T1n1ck94blkUITMx3RjyIOwxar1Aqr-kE88iil2uWf&_nc_ohc=s5PrlNnUd_AQ7kNvgHmpLvQ&_nc_zt=23&_nc_ht=scontent.fhan3-2.fna&_nc_gid=ACanW4k9tfF8IOiy9sDGNKX&oh=00_AYAUZoalGliyPJ-XCt0TW6CkQ2foaIn848OaF8cs5frYyA&oe=67145FF9"
+                                src={images.avatar}
                                 alt="Nguyễn Thùy Dương"
                                 className={cx('user-avatar')}
                                 fallback='https://scontent.fhph1-2.fna.fbcdn.net/v/t39.30808-6/462716938_1063431158555320_3980149353593334452_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHCcrNBzjLZ62GnDF6e5j0wcKkEniPo_4BwqQSeI-j_gLi8LbBzEscgbcpluaiwbwrULZS99JtCnTwBNzwuN-gv&_nc_ohc=vCEc0Iw0oPwQ7kNvgGauAUn&_nc_ht=scontent.fhph1-2.fna&_nc_gid=AKKxE-S48SskLkbUgNAaucm&oh=00_AYA4PbhsDTdJlZvmAKfabgNlufBgJo31wMIbBnQUP0aenA&oe=6716B9E3'
