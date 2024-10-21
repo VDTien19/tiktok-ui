@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import HeadlessTippy from '@tippyjs/react/headless';
 
-import * as request from '~/utils/request';
+import * as searchServices from '~/apiService/searchServices';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import AccountItem from '../../../AccountItem';
 import styles from './Search.module.scss';
@@ -25,28 +25,17 @@ function Search() {
 
     useEffect(() => {
         if (!debounced) {
-            setSearchResult([]); // Xóa kết quả tìm kiếm khi xóa ký tự tìm kiếm
+            setSearchResult([]);
             return;
         }
-        // .trim() để bỏ khoảng trắng đầu cuối để khi gõ dấu cách không bị gửi request
-        // Khi mới đầu vào app thì searchValue='' mà api yêu cầu search?q= là require nên sẽ lỗi
-        // => Kiểm tra nếu không có searchValue thì return để thoát ra khỏi hàm
-
-        setLoading(true);
 
         const fetchApi = async () => {
-            try {
-                const res = await request.get('users/search', {
-                    params: {
-                        q: debounced,
-                        type: 'less',
-                    },
-                });
-                setSearchResult(res.data)
-                setLoading(false);
-            } catch (error) {
-                setLoading(false);
-            }
+            setLoading(true);
+
+            const result = await searchServices.search(debounced);
+            setSearchResult(result);
+            
+            setLoading(false);
         };
 
         fetchApi();
