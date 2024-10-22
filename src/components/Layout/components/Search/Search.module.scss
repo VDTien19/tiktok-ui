@@ -19,6 +19,8 @@
         background-color: transparent;
         height: 100%;
         caret-color: var(--primary);
+        font-family: "TikTokFont", sans-serif;
+        font-weight: 400;
     }
 
     input:not(:placeholder-shown) ~ .search-btn {

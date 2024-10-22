@@ -12,14 +12,16 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
+import { Link } from 'react-router-dom';
 
 import styles from './Header.module.scss';
 import images from '~/assets/images';
 import Button from '~/components/Button';
 import Menu from '~/components/Popper/Menu';
 import { MailboxIcon, UploadIcon, InboxIcon } from '~/components/Icons';
-import Image from '~/components/Images'
-import Search from '../Search'
+import Image from '~/components/Images';
+import Search from '../Search';
+import routesConfig from '~/config/routes'
 
 // classname có thể viết '-'
 const cx = classNames.bind(styles);
@@ -129,31 +131,33 @@ function Header() {
         {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'View profile',
-            to: '/@ntd.july'
+            to: '/@ntd.july',
         },
         {
             icon: <FontAwesomeIcon icon={faCoins} />,
             title: 'Coin',
-            to: '/coin'
+            to: '/coin',
         },
         {
             icon: <FontAwesomeIcon icon={faGear} />,
             title: 'Settings',
-            to: '/setting'
+            to: '/setting',
         },
         ...MENU_ITEMS,
         {
             icon: <FontAwesomeIcon icon={faSignOut} />,
             title: 'Log out',
             to: '/logout',
-            separate: true
+            separate: true,
         },
-    ]
-    
+    ];
+
     return (
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
-                <img src={images.logo} alt="Tiktok" />
+                <Link to={routesConfig.home} className={cx('logo-link')}>
+                    <img src={images.logo} alt="Tiktok" />
+                </Link>
                 <div>
                     <Search />
                 </div>
@@ -161,17 +165,19 @@ function Header() {
                 <div className={cx('actions')}>
                     {currentUser ? (
                         <>
-                            <Tippy content="Upload video" placement='bottom'>
+                            <Tippy content="Upload video" placement="bottom">
                                 <button className={cx('action-btn')}>
                                     <UploadIcon className={cx('upload-icon')} />
                                 </button>
                             </Tippy>
-                            <Tippy content="Mailbox" placement='bottom'>
+                            <Tippy content="Mailbox" placement="bottom">
                                 <button className={cx('action-btn')}>
-                                    <MailboxIcon className={cx('mailbox-icon')} />
+                                    <MailboxIcon
+                                        className={cx('mailbox-icon')}
+                                    />
                                 </button>
                             </Tippy>
-                            <Tippy content="Inbox" placement='bottom'>
+                            <Tippy content="Inbox" placement="bottom">
                                 <button className={cx('action-btn')}>
                                     <InboxIcon className={cx('inbox-icon')} />
                                 </button>
@@ -184,13 +190,16 @@ function Header() {
                         </>
                     )}
 
-                    <Menu items={currentUser ? USER_MENU : MENU_ITEMS} onChange={handleChangeMenu}>
+                    <Menu
+                        items={currentUser ? USER_MENU : MENU_ITEMS}
+                        onChange={handleChangeMenu}
+                    >
                         {currentUser ? (
                             <Image
                                 src={images.avatar}
                                 alt="Nguyễn Thùy Dương"
                                 className={cx('user-avatar')}
-                                fallback='https://scontent.fhph1-2.fna.fbcdn.net/v/t39.30808-6/462716938_1063431158555320_3980149353593334452_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHCcrNBzjLZ62GnDF6e5j0wcKkEniPo_4BwqQSeI-j_gLi8LbBzEscgbcpluaiwbwrULZS99JtCnTwBNzwuN-gv&_nc_ohc=vCEc0Iw0oPwQ7kNvgGauAUn&_nc_ht=scontent.fhph1-2.fna&_nc_gid=AKKxE-S48SskLkbUgNAaucm&oh=00_AYA4PbhsDTdJlZvmAKfabgNlufBgJo31wMIbBnQUP0aenA&oe=6716B9E3'
+                                fallback="https://scontent.fhph1-2.fna.fbcdn.net/v/t39.30808-6/462716938_1063431158555320_3980149353593334452_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHCcrNBzjLZ62GnDF6e5j0wcKkEniPo_4BwqQSeI-j_gLi8LbBzEscgbcpluaiwbwrULZS99JtCnTwBNzwuN-gv&_nc_ohc=vCEc0Iw0oPwQ7kNvgGauAUn&_nc_ht=scontent.fhph1-2.fna&_nc_gid=AKKxE-S48SskLkbUgNAaucm&oh=00_AYA4PbhsDTdJlZvmAKfabgNlufBgJo31wMIbBnQUP0aenA&oe=6716B9E3"
                             />
                         ) : (
                             <button className={cx('more-btn')}>

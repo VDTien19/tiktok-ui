@@ -12,7 +12,7 @@ const cx = classNames.bind(styles);
 const defaultFn = () => {}
 // Gán onChange mặc định là defaultFn để khi Comp ở ngoài không truyền vào thì sẽ không bị lỗi
 
-function Menu({ children, items = [], onChange = defaultFn }) {
+function Menu({ children, items = [], hideOnClick=false, onChange = defaultFn }) {
     const [history, setHistory] = useState([{ data: items }]);
     const current = history[history.length - 1];
     // current là phần tử cuối, chúng ta sẽ làm theo logic mảng, tất cả phần tử cấp 1 gom vào 1 ptu trong mảng, cấp 2 gom vào ptu thứ 2 ....
@@ -41,6 +41,7 @@ function Menu({ children, items = [], onChange = defaultFn }) {
     return (
         <Tippy
             interactive
+            hideOnClick={hideOnClick}
             delay={[0, 700]}
             offset={[8, 14]}   // ngang, cao
             placement="bottom-end"
