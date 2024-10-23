@@ -14,28 +14,45 @@ import Menu, { MenuItem } from './Menu';
 
 const cx = classNames.bind(styles);
 
+const MENU_ITEMS = [
+    {
+        title: 'For you',
+        to: config.routes.home,
+        icon: {
+            active: <HomeActiveIcon />,
+            default: <HomeIcon />,
+        },
+    },
+    {
+        title: 'Following',
+        to: config.routes.following,
+        icon: {
+            active: <UserGroupActiveIcon />,
+            default: <UserGroupIcon />,
+        },
+    },
+    {
+        title: 'LIVE',
+        to: config.routes.live,
+        icon: {
+            active: <LiveActiveIcon />,
+            default: <LiveIcon />,
+        },
+    },
+];
+
 function Sidebar() {
     return (
         <aside className={cx('wrapper')}>
             <Menu>
-                <MenuItem
-                    title="For you"
-                    to={config.routes.home}
-                    icon={{ active: <HomeActiveIcon />, default: <HomeIcon /> }}
-                />
-                <MenuItem
-                    title="Following"
-                    to={config.routes.following}
-                    icon={{
-                        active: <UserGroupActiveIcon />,
-                        default: <UserGroupIcon />,
-                    }}
-                />
-                <MenuItem
-                    title="LIVE"
-                    to={config.routes.live}
-                    icon={{ active: <LiveActiveIcon />, default: <LiveIcon /> }}
-                />
+                {MENU_ITEMS.map((item, index) => (
+                    <MenuItem
+                        key={index}
+                        title={item.title}
+                        to={item.to}
+                        icon={item.icon}
+                    />
+                ))}
             </Menu>
         </aside>
     );
