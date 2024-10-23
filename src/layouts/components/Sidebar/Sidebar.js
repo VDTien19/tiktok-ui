@@ -21,20 +21,20 @@ function Sidebar() {
                 <MenuItem
                     title="For you"
                     to={config.routes.home}
-                    icon={<HomeIcon />}
-                    activeIcon={<HomeActiveIcon />}
+                    icon={{ active: <HomeActiveIcon />, default: <HomeIcon /> }}
                 />
                 <MenuItem
                     title="Following"
                     to={config.routes.following}
-                    icon={<UserGroupIcon />}
-                    activeIcon={<UserGroupActiveIcon />}
+                    icon={{
+                        active: <UserGroupActiveIcon />,
+                        default: <UserGroupIcon />,
+                    }}
                 />
                 <MenuItem
                     title="LIVE"
                     to={config.routes.live}
-                    icon={<LiveIcon />}
-                    activeIcon={<LiveActiveIcon />}
+                    icon={{ active: <LiveActiveIcon />, default: <LiveIcon /> }}
                 />
             </Menu>
         </aside>

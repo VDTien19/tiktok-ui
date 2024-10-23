@@ -10,14 +10,6 @@
 
     &.active {
         color: var(--primary);
-
-        .icon {
-            display: none;
-        }
-
-        .active-icon {
-            display: flex;
-        }
     }
 
     &:hover {
@@ -25,10 +17,11 @@
     }
 }
 
-.title {
-    margin-left: 10px;
+.icon {
+    display: flex;
+    align-items: center;
 }
 
-.active-icon {
-    display: none;
+.title {
+    margin-left: 10px;
 }

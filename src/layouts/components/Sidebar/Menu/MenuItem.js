@@ -5,15 +5,22 @@ import styles from './Menu.module.scss';
 
 const cx = classNames.bind(styles);
 
-function MenuItem({ title, to, icon, activeIcon }) {
+function MenuItem({ title, to, icon }) {
     return (
         <NavLink
-            className={(nav) => cx('menu-item', { active: nav.isActive })}
             to={to}
+            // className={cx('menu-item')}
+            className={(navData) => cx('menu-item', { active: navData.isActive })}
         >
-            <span className={cx('icon')}>{icon}</span>
-            <span className={cx('active-icon')}>{activeIcon}</span>
-            <span className={cx('title')}>{title}</span>
+            {/* isActive là một giá trị do React Router cung cấp thông qua callback */}
+            {({ isActive }) => (
+                <>
+                    <div className={cx('icon')}>
+                        {isActive ? icon.active : icon.default}
+                    </div>
+                    <span className={cx('title')}>{title}</span>
+                </>
+            )}
         </NavLink>
     );
 }
@@ -21,8 +28,10 @@ function MenuItem({ title, to, icon, activeIcon }) {
 MenuItem.propTypes = {
     title: PropTypes.string.isRequired,
     to: PropTypes.string.isRequired,
-    icon: PropTypes.node.isRequired,
-    activeIcon: PropTypes.node.isRequired,
+    icon: PropTypes.shape({
+        active: PropTypes.node.isRequired,
+        default: PropTypes.node.isRequired,
+    }).isRequired,
 };
 
 export default MenuItem;
