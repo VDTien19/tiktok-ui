@@ -2,10 +2,10 @@ import classNames from 'classnames/bind';
 
 import {
     HomeIcon,
-    UserGroupIcon,
+    FollowIcon,
     LiveIcon,
     HomeActiveIcon,
-    UserGroupActiveIcon,
+    FollowActiveIcon,
     LiveActiveIcon,
 } from '~/components/Icons';
 import config from '~/config';
@@ -27,8 +27,8 @@ const MENU_ITEMS = [
         title: 'Following',
         to: config.routes.following,
         icon: {
-            active: <UserGroupActiveIcon />,
-            default: <UserGroupIcon />,
+            active: <FollowActiveIcon className={cx('follow-icon')}  />,
+            default: <FollowIcon className={cx('follow-icon')}  />,
         },
     },
     {

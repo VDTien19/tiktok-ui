@@ -9,7 +9,6 @@ function MenuItem({ title, to, icon }) {
     return (
         <NavLink
             to={to}
-            // className={cx('menu-item')}
             className={(navData) => cx('menu-item', { active: navData.isActive })}
         >
             {/* isActive là một giá trị do React Router cung cấp thông qua callback */}
