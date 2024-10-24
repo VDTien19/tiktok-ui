@@ -11,6 +11,7 @@ import {
 import config from '~/config';
 import styles from './Sidebar.module.scss';
 import Menu, { MenuItem } from './Menu';
+import SuggestedAccounts from '~/components/SuggestedAccounts';
 
 const cx = classNames.bind(styles);
 
@@ -54,6 +55,8 @@ function Sidebar() {
                     />
                 ))}
             </Menu>
+            <SuggestedAccounts label='Suggest Accounts' />
+            <SuggestedAccounts label='Folling Accounts' />
         </aside>
     );
 }

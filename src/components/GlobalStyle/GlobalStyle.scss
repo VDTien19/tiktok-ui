@@ -1,5 +1,5 @@
 @import 'normalize.css';
-// @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
     --primary: #fe2c55;
@@ -7,7 +7,7 @@
     --white: #fff;
     --text-color: #161823;
 
-    --font-family: 'TikTokDisplayFont', sans-serif;
+    --font-family: "IBM Plex Sans", TikTokFont, Arial, Tahoma, PingFangSC, sans-serif;
 
     // Default layout
     --default-layout-header-heigh: 60px;
@@ -63,35 +63,35 @@ a {
 }
 
 // Font emmbeded
-@font-face {
-    font-family: TikTokDisplayFont;
-    src: url('/assets/fonts/TikTokDisplayFont-Bold.woff2');
-    font-weight: 700;
-}
+// @font-face {
+//     font-family: TikTokDisplayFont;
+//     src: url('/assets/fonts/TikTokDisplayFont-Bold.woff2');
+//     font-weight: 700;
+// }
 
-@font-face {
-    font-family: TikTokDisplayFont;
-    src: url('/assets/fonts/TikTokDisplayFont-Semibold.woff2');
-    font-weight: 600;
-}
+// @font-face {
+//     font-family: TikTokDisplayFont;
+//     src: url('/assets/fonts/TikTokDisplayFont-Semibold.woff2');
+//     font-weight: 600;
+// }
 
-@font-face {
-    font-family: TikTokFont;
-    src: url('/assets/fonts/TikTokFont-Bold.woff2');
-    font-weight: 700;
-}
+// @font-face {
+//     font-family: TikTokFont;
+//     src: url('/assets/fonts/TikTokFont-Bold.woff2');
+//     font-weight: 700;
+// }
 
-@font-face {
-    font-family: TikTokFont;
-    src: url('/assets/fonts/TikTokFont-Regular.woff2');
-    font-weight: 400;
-}
+// @font-face {
+//     font-family: TikTokFont;
+//     src: url('/assets/fonts/TikTokFont-Regular.woff2');
+//     font-weight: 400;
+// }
 
-@font-face {
-    font-family: TikTokFont;
-    src: url('/assets/fonts/TikTokFont-Semibold.woff2');
-    font-weight: 600;
-}
+// @font-face {
+//     font-family: TikTokFont;
+//     src: url('/assets/fonts/TikTokFont-Semibold.woff2');
+//     font-weight: 600;
+// }
 
 // Custom tippy tooltip
 body {
