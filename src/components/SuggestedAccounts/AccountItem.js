@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 // import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,7 @@ import Tippy from '@tippyjs/react/headless';
 import styles from './SuggestedAccounts.module.scss';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import AccountPreview from './AccountPreview';
+import Image from '~/components/Images'
 
 const cx = classNames.bind(styles);
 
@@ -17,7 +18,7 @@ function AccountItem({ data }) {
         return (
             <div tabIndex="-1" {...attrs} >
                 <PopperWrapper>
-                    <AccountPreview/>
+                    <AccountPreview data={data} />
                 </PopperWrapper>
             </div>
         )
@@ -33,20 +34,23 @@ function AccountItem({ data }) {
                 render={renderPreview}
             >
                 <div className={cx('account-item')}>
-                    <img
+                    <Image
                         className={cx('avatar')}
-                        src="https://scontent.fhph2-1.fna.fbcdn.net/v/t39.30808-6/464558306_864790569146516_1294670142566699772_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFOnqsyp94cFhcRJuFhVq2u4SL92JdARbPhIv3Yl0BFs3OPbGWXddfxpn6411Gh-lA&_nc_ohc=FKjatmHyk8IQ7kNvgHtqa8l&_nc_zt=23&_nc_ht=scontent.fhph2-1.fna&_nc_gid=Ahayc59cNyL1tFnXbjs0dAS&oh=00_AYBRw4X7O_1_xvgVrjlteNmi-JjFKWo2yTrP-v7kMefHYw&oe=671FB2CA"
-                        alt=""
+                        src={data.avatar}
+                        alt={data.nickname}
+                        fallback="https://cdn.pixabay.com/photo/2021/06/15/12/28/tiktok-6338429_1280.png"
                     />
                     <div className={cx('item-info')}>
                         <p className={cx('nickname')}>
-                            <strong>quocnguyenphu</strong>
-                            <FontAwesomeIcon
-                                className={cx('check')}
-                                icon={faCheckCircle}
-                            />
+                            <strong>{data.nickname}</strong>
+                            {data.tick && (
+                                <FontAwesomeIcon
+                                    className={cx('check')}
+                                    icon={faCheckCircle}
+                                />
+                            )}
                         </p>
-                        <p className={cx('name')}>Quốc Nguyễn Phú</p>
+                        <p className={cx('name')}>{`${data.first_name} ${data.last_name}`}</p>
                     </div>
                 </div>
             </Tippy>
@@ -54,6 +58,8 @@ function AccountItem({ data }) {
     );
 }
 
-// AccountItem.propTypes = {};
+AccountItem.propTypes = {
+    data: PropTypes.object.isRequired,
+}
 
 export default AccountItem;
