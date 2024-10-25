@@ -16,7 +16,7 @@ import * as userService from '~/services/userService';
 
 const cx = classNames.bind(styles);
 
-const INIT_PAGE = 6;
+const INIT_PAGE = 1;
 const PER_PAGE = 5;
 
 const MENU_ITEMS = [
