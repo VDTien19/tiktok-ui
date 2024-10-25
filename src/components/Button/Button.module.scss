@@ -19,6 +19,7 @@
 
     &.disable {
         pointer-events: none;
+        border: 1px solid;
         opacity: 0.5;
     }
 }
