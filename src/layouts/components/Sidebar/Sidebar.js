@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import classNames from 'classnames/bind';
 import {
     HomeIcon,
@@ -15,6 +15,9 @@ import SuggestedAccounts from '~/components/SuggestedAccounts';
 import * as userService from '~/services/userService';
 
 const cx = classNames.bind(styles);
+
+const INIT_PAGE = 6;
+const PER_PAGE = 5;
 
 const MENU_ITEMS = [
     {
@@ -45,15 +48,20 @@ const MENU_ITEMS = [
 
 function Sidebar() {
     const [suggestedUsers, setSuggestedUsers] = useState([]);
+    const [numPage, setNumPage] = useState(INIT_PAGE);
 
     useEffect(() => {
-        userService
-            .getSuggested({ page:1, perPage:5 })
-            .then((data) => {
-                setSuggestedUsers(data)
-            })
-            .catch((err) => console.log(err));
-    }, []);
+        const fetchApi = async () => {
+            const data = await userService.getSuggested({ page: numPage, perPage: PER_PAGE });
+            setSuggestedUsers((prevUser) => [...prevUser, ...data]);
+        };
+        fetchApi();
+    }, [numPage]);
+
+    const handleSeeMore = useCallback(() => {
+        setNumPage((prevPage) => prevPage + 1);
+        console.log('page: ', numPage);
+    }, [numPage])
 
     return (
         <aside className={cx('wrapper')}>
@@ -67,7 +75,11 @@ function Sidebar() {
                     />
                 ))}
             </Menu>
-            <SuggestedAccounts label="Suggest Accounts" data={suggestedUsers} />
+            <SuggestedAccounts
+                label="Suggest Accounts"
+                data={suggestedUsers}
+                onSeeMore={handleSeeMore}
+            />
             <SuggestedAccounts label="Following Accounts" />
         </aside>
     );

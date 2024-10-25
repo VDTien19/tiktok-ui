@@ -6,16 +6,16 @@ import styles from './SuggestedAccounts.module.scss';
 
 const cx = classNames.bind(styles);
 
-function SuggestedAccounts({ label, data = [] }) {
+function SuggestedAccounts({ label, data = [], onSeeMore }) {
     return (
         <div className={cx('wrapper')}>
             <p className={cx('label')}>{label}</p>
 
             {data.map((account) => (
-                <AccountItem key={account.id} data={account} />
+                <AccountItem key={account.nickname} data={account} />
             ))}
 
-            <p className={cx('more-btn')}>See all</p>
+            <p className={cx('more-btn')} onClick={onSeeMore}>See more</p>
         </div>
     );
 }
