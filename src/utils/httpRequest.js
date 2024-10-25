@@ -11,4 +11,14 @@ export const get = async (path, options = {}) => {
     return respone.data;
 };
 
+export const post = async (path, body = {}, options = {}) => {
+    const respone = await httpRequest.post(path, body, options)
+    return respone.data
+}
+
+export const deleted = async (path, body = {}, options = {}) => {
+    const respone = await httpRequest.delete(path, body, options)
+    return respone.data
+}
+
 export default httpRequest;
