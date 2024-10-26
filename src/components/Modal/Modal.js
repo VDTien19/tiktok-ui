@@ -1,10 +1,10 @@
-import PropTypes from 'prop-types'
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './Modal.module.scss'
+import styles from './Modal.module.scss';
 import { ClosedIcon } from '~/components/Icons';
 
-
-const cx = classNames.bind(styles)
+const cx = classNames.bind(styles);
 
 function Modal({ children, isOpen, onClose }) {
 
@@ -12,10 +12,13 @@ function Modal({ children, isOpen, onClose }) {
         return null;
     }
 
-    return (  
+    return (
         <div className={cx('modal')}>
-            <div className={cx('modal-overlay')} onClick={onClose} >
-                <div className={cx('modal-content')} onClick={(e) => e.stopPropagation()}>
+            <div className={cx('modal-overlay')} onClick={onClose}>
+                <div
+                    className={cx('modal-content')}
+                    onClick={(e) => e.stopPropagation()}
+                >
                     <ClosedIcon className={cx('close-btn')} onClick={onClose} />
                     {children}
                 </div>
@@ -26,6 +29,6 @@ function Modal({ children, isOpen, onClose }) {
 
 Modal.propTypes = {
     children: PropTypes.node.isRequired,
-}
+};
 
 export default Modal;

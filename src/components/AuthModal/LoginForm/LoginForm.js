@@ -8,19 +8,15 @@ import * as authLogin from '~/services/authServices';
 
 const cx = classNames.bind(styles);
 
-function LoginForm() {
+function LoginForm({ onClose, switchToRegister }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(true);
 
     const handleLoginSuccess = () => {
         setUsername('');
         setPassword('');
-    };
-
-    const handleClose = () => {
-        setIsModalOpen(false);
+        onClose();
     };
 
     const handleSubmit = async (e) => {
@@ -41,7 +37,7 @@ function LoginForm() {
     };
 
     return (
-        <Modal isOpen={isModalOpen} onClose={handleClose}>
+        <Modal isOpen={true} onClose={onClose} className={cx('modal-fadein')}>
             <div className={cx('wrapper')}>
                 <form className={cx('form')} onSubmit={handleSubmit}>
                     <h2 className={cx('title')}>Đăng nhập vào Tiktok</h2>
@@ -80,7 +76,11 @@ function LoginForm() {
                         </label>
                     </div>
 
-                    {error && <p className={cx('error')}>Invalid Email or Password. Please try again!</p>}
+                    {error && (
+                        <p className={cx('error')}>
+                            Invalid Email or Password. Please try again!
+                        </p>
+                    )}
 
                     <Button
                         outline={!!username && !!password}
@@ -92,9 +92,16 @@ function LoginForm() {
             </div>
 
             <div className={cx('footer')}>
-                <p>Don't have an account? <strong className={cx('sign-up')}>Sign up</strong> </p> 
+                <p>
+                    Don't have an account?{' '}
+                    <strong
+                        className={cx('sign-up')}
+                        onClick={switchToRegister}
+                    >
+                        Sign up
+                    </strong>{' '}
+                </p>
             </div>
-
         </Modal>
     );
 }

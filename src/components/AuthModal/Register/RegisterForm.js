@@ -9,22 +9,17 @@ import * as authRegister from '~/services/authServices';
 
 const cx = classNames.bind(styles);
 
-function RegisterForm() {
+function RegisterForm({ onClose, switchToLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(true);
 
     const navigate = useNavigate();
 
     const handleRegisterSuccess = () => {
         setUsername('');
         setPassword('');
-        setIsModalOpen(false);
-    };
-
-    const handleClose = () => {
-        setIsModalOpen(false);
+        onClose();
     };
 
     const handleSubmit = async (e) => {
@@ -47,7 +42,7 @@ function RegisterForm() {
     };
 
     return (
-        <Modal isOpen={isModalOpen} onClose={handleClose}>
+        <Modal isOpen={true} onClose={onClose}>
             <div className={cx('wrapper')}>
                 <form className={cx('form')} onSubmit={handleSubmit}>
                     <h2 className={cx('title')}>Tạo tài khoản với Tiktok</h2>
@@ -104,7 +99,9 @@ function RegisterForm() {
             <div className={cx('footer')}>
                 <p>
                     Already have an account?{' '}
-                    <strong className={cx('sign-up')}>Login.</strong>{' '}
+                    <strong className={cx('sign-up')} onClick={switchToLogin}>
+                        Login.
+                    </strong>{' '}
                 </p>
             </div>
         </Modal>
