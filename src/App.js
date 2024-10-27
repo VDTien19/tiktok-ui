@@ -5,10 +5,6 @@ import DefaultLayout from '~/layouts';
 
 function App() {
 
-    // return (
-    //     <Register />
-    // )
-
     return (
         <Router>
             <div className="App">

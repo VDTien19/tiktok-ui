@@ -4,14 +4,14 @@ import Modal from '~/components/Modal';
 import styles from './Login.module.scss';
 import { useState } from 'react';
 import Button from '~/components/Button';
-import * as authLogin from '~/services/authServices';
+import { useAuth } from '~/context/AuthContext';
 
 const cx = classNames.bind(styles);
 
 function LoginForm({ onClose, switchToRegister }) {
+    const { login, error, setError } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
 
     const handleLoginSuccess = () => {
         setUsername('');
@@ -22,12 +22,7 @@ function LoginForm({ onClose, switchToRegister }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await authLogin.login(username, password);
-            console.log('Login successful:', response);
-
-            if (response && response.meta.token) {
-                localStorage.setItem('token', response.meta.token);
-            }
+            await login(username, password)
 
             handleLoginSuccess();
         } catch (err) {

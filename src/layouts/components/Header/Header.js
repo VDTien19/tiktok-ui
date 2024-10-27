@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -12,7 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import styles from './Header.module.scss';
 import images from '~/assets/images';
@@ -21,7 +22,9 @@ import Menu from '~/components/Popper/Menu';
 import { MailboxIcon, UploadIcon, InboxIcon } from '~/components/Icons';
 import Image from '~/components/Images';
 import Search from '../Search';
-import config from '~/config'
+import config from '~/config';
+import { useAuth } from '~/context/AuthContext';
+import AuthModal from '~/components/AuthModal';
 
 // classname có thể viết '-'
 const cx = classNames.bind(styles);
@@ -114,7 +117,15 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
-    const currentUser = true;
+    const { userData, isAuthenticated } = useAuth();
+    const [showAuthModal, setShowAuthModal] = useState(false);
+
+    const location = useLocation();
+
+    if (isAuthenticated) {
+        console.log('userData: ', userData);
+        console.log("isAuthenticated: ", isAuthenticated);
+    }
 
     // Handle logic
     const handleChangeMenu = (menuItem) => {
@@ -127,11 +138,30 @@ function Header() {
         }
     };
 
+    const handleOpenForm = () => {
+        setShowAuthModal(true);
+    };
+
+    let nickname;
+    if(location.pathname !== userData?.nickname) {
+        nickname = `@${userData?.nickname}`
+    } else {
+        nickname = '/profile'
+    }
+    // console.log('nickname: ', nickname);
+
+    // const handleViewProfile = () => {
+    //     console.log("Clicked !")
+    //     if (location.pathname !== userData?.nickname) {
+    //         navigate(`@${userData?.nickname}`);
+    //     }
+    // };
+
     const USER_MENU = [
         {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'View profile',
-            to: '/@ntd.july',
+            to: nickname,
         },
         {
             icon: <FontAwesomeIcon icon={faCoins} />,
@@ -153,63 +183,93 @@ function Header() {
     ];
 
     return (
-        <header className={cx('wrapper')}>
-            <div className={cx('inner')}>
-                <Link to={config.routes.home} className={cx('logo-link')}>
-                    <Image src={images.logo} alt="Tiktok" />
-                </Link>
-                <div>
-                    <Search />
-                </div>
+        <>
+            <header className={cx('wrapper')}>
+                <div className={cx('inner')}>
+                    <Link to={config.routes.home} className={cx('logo-link')}>
+                        <Image src={images.logo} alt="Tiktok" />
+                    </Link>
+                    <div>
+                        <Search />
+                    </div>
 
-                <div className={cx('actions')}>
-                    {currentUser ? (
-                        <>
-                            <Tippy content="Upload video" placement="bottom">
-                                <button className={cx('action-btn')}>
-                                    <UploadIcon className={cx('upload-icon')} />
-                                </button>
-                            </Tippy>
-                            <Tippy content="Mailbox" placement="bottom">
-                                <button className={cx('action-btn')}>
-                                    <MailboxIcon
-                                        className={cx('mailbox-icon')}
+                    <div className={cx('actions')}>
+                        {isAuthenticated ? (
+                            <>
+                                <Tippy
+                                    content="Upload video"
+                                    placement="bottom"
+                                >
+                                    <button className={cx('action-btn')}>
+                                        <UploadIcon
+                                            className={cx('upload-icon')}
+                                        />
+                                    </button>
+                                </Tippy>
+                                <Tippy content="Mailbox" placement="bottom">
+                                    <button className={cx('action-btn')}>
+                                        <MailboxIcon
+                                            className={cx('mailbox-icon')}
+                                        />
+                                    </button>
+                                </Tippy>
+                                <Tippy content="Inbox" placement="bottom">
+                                    <button className={cx('action-btn')}>
+                                        <InboxIcon
+                                            className={cx('inbox-icon')}
+                                        />
+                                    </button>
+                                </Tippy>
+                            </>
+                        ) : (
+                            <>
+                                <Button text>Upload</Button>
+                                <Button primary onClick={handleOpenForm}>
+                                    Log in
+                                </Button>
+                            </>
+                        )}
+                        {isAuthenticated && (
+                            <Menu items={USER_MENU} onChange={handleChangeMenu} >
+                                <Image
+                                    src={userData?.avatar}
+                                    alt={userData?.nickname}
+                                    className={cx('user-avatar')}
+                                />
+                            </Menu>
+                        )}
+                        {!isAuthenticated && (
+                            <Menu items={MENU_ITEMS} onChange={handleChangeMenu} >
+                                <button className={cx('more-btn')}>
+                                    <FontAwesomeIcon
+                                        icon={faEllipsisVertical}
                                     />
                                 </button>
-                            </Tippy>
-                            <Tippy content="Inbox" placement="bottom">
-                                <button className={cx('action-btn')}>
-                                    <InboxIcon className={cx('inbox-icon')} />
-                                </button>
-                            </Tippy>
-                        </>
-                    ) : (
-                        <>
-                            <Button text>Upload</Button>
-                            <Button primary>Log in</Button>
-                        </>
-                    )}
-
-                    <Menu
-                        items={currentUser ? USER_MENU : MENU_ITEMS}
-                        onChange={handleChangeMenu}
-                    >
-                        {currentUser ? (
-                            <Image
-                                src={images.avatar}
-                                alt="Nguyễn Thùy Dương"
-                                className={cx('user-avatar')}
-                                fallback="https://scontent.fhph1-2.fna.fbcdn.net/v/t39.30808-6/462716938_1063431158555320_3980149353593334452_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHCcrNBzjLZ62GnDF6e5j0wcKkEniPo_4BwqQSeI-j_gLi8LbBzEscgbcpluaiwbwrULZS99JtCnTwBNzwuN-gv&_nc_ohc=vCEc0Iw0oPwQ7kNvgGauAUn&_nc_ht=scontent.fhph1-2.fna&_nc_gid=AKKxE-S48SskLkbUgNAaucm&oh=00_AYA4PbhsDTdJlZvmAKfabgNlufBgJo31wMIbBnQUP0aenA&oe=6716B9E3"
-                            />
-                        ) : (
-                            <button className={cx('more-btn')}>
-                                <FontAwesomeIcon icon={faEllipsisVertical} />
-                            </button>
+                            </Menu>
                         )}
-                    </Menu>
+                        {/* <Menu
+                            items={isAuthenticated ? USER_MENU : MENU_ITEMS}
+                            onChange={handleChangeMenu}
+                        >
+                            {isAuthenticated ? (
+                                <Image
+                                    src={userData?.avatar}
+                                    alt={userData?.nickname}
+                                    className={cx('user-avatar')}
+                                />
+                            ) : (
+                                <button className={cx('more-btn')}>
+                                    <FontAwesomeIcon
+                                        icon={faEllipsisVertical}
+                                    />
+                                </button>
+                            )}
+                        </Menu> */}
+                    </div>
                 </div>
-            </div>
-        </header>
+            </header>
+            {showAuthModal && <AuthModal />}
+        </>
     );
 }
 
