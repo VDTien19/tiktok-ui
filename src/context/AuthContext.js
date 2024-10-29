@@ -65,11 +65,18 @@ function AuthProvider({ children }) {
         }
     };
 
-    const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user-id');
-        setUserData(null);
-        setIsAuthenticated(false);
+    const logout = async () => {
+        try {
+            authServices.logout()
+            localStorage.removeItem('token');
+            setUserData(null);
+            setIsAuthenticated(false);
+        } catch (err) {
+            console.log('>>> Logout error:', err);
+            setError('An error occurred during logout.');
+        } finally {
+            // setLoading(false);
+        }
     };
 
     const value = {

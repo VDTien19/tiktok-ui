@@ -247,24 +247,6 @@ function Header() {
                                 </button>
                             </Menu>
                         )}
-                        {/* <Menu
-                            items={isAuthenticated ? USER_MENU : MENU_ITEMS}
-                            onChange={handleChangeMenu}
-                        >
-                            {isAuthenticated ? (
-                                <Image
-                                    src={userData?.avatar}
-                                    alt={userData?.nickname}
-                                    className={cx('user-avatar')}
-                                />
-                            ) : (
-                                <button className={cx('more-btn')}>
-                                    <FontAwesomeIcon
-                                        icon={faEllipsisVertical}
-                                    />
-                                </button>
-                            )}
-                        </Menu> */}
                     </div>
                 </div>
             </header>
