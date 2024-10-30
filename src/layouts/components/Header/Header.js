@@ -117,7 +117,7 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
-    const { userData, isAuthenticated } = useAuth();
+    const { userData, isAuthenticated, logout } = useAuth();
     const [showAuthModal, setShowAuthModal] = useState(false);
 
     const location = useLocation();
@@ -141,6 +141,16 @@ function Header() {
     const handleOpenForm = () => {
         setShowAuthModal(true);
     };
+
+    const handleLogout = () => {
+        const confirmed = window.confirm("Are you sure you want to log out?");
+        if (confirmed) {
+            logout();
+            console.log('>>> Logout success');
+        } else {
+            console.log('>>> Logout canceled');
+        }
+    }
 
     let nickname;
     if(location.pathname !== userData?.nickname) {
@@ -177,7 +187,8 @@ function Header() {
         {
             icon: <FontAwesomeIcon icon={faSignOut} />,
             title: 'Log out',
-            to: '/logout',
+            onClick: handleLogout,
+            // to: '/logout',
             separate: true,
         },
     ];

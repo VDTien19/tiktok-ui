@@ -32,6 +32,9 @@ function Menu({
                     key={index}
                     data={item}
                     onClick={() => {
+                        if (item.onClick) {
+                            item.onClick();
+                        }
                         if (isParent) {
                             // console.log(item.children);
                             setHistory((prev) => [...prev, item.children]); // prev để giữ lại các item cha (mảng đầu tiên gồm: lang, help, keyboard)
