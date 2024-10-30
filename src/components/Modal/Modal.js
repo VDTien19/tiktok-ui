@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './Modal.module.scss';
@@ -29,6 +29,8 @@ function Modal({ children, isOpen, onClose }) {
 
 Modal.propTypes = {
     children: PropTypes.node.isRequired,
+    isOpen: PropTypes.bool,
+    onClose: PropTypes.func,
 };
 
 export default Modal;

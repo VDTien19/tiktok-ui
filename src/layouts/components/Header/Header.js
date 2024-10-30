@@ -13,7 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import styles from './Header.module.scss';
@@ -122,6 +122,7 @@ function Header() {
     const [showAuthModal, setShowAuthModal] = useState(false);
 
     const location = useLocation();
+    const navigate = useNavigate();
 
     if (isAuthenticated) {
         console.log('userData: ', userData);
@@ -143,6 +144,10 @@ function Header() {
         setShowAuthModal(true);
     };
 
+    const handleCloseModal = () => {
+        setShowAuthModal(false);
+    };
+
     const handleLogout = () => {
         const confirmed = window.confirm("Are you sure you want to log out?");
         if (confirmed) {
@@ -161,26 +166,27 @@ function Header() {
         }
     }
 
-    let nickname;
-    if(location.pathname !== userData?.nickname) {
-        nickname = `@${userData?.nickname}`
-    } else {
-        nickname = '/profile'
-    }
+    // let nickname;
+    // if(location.pathname !== userData?.nickname) {
+    //     nickname = `@${userData?.nickname}`
+    // } else {
+    //     nickname = '/profile'
+    // }
     // console.log('nickname: ', nickname);
 
-    // const handleViewProfile = () => {
-    //     console.log("Clicked !")
-    //     if (location.pathname !== userData?.nickname) {
-    //         navigate(`@${userData?.nickname}`);
-    //     }
-    // };
+    const handleViewProfile = () => {
+        console.log("Clicked !")
+        if (location.pathname !== userData?.nickname) {
+            navigate(`@${userData?.nickname}`);
+        }
+    };
 
     const USER_MENU = [
         {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'View profile',
-            to: nickname,
+            onClick: handleViewProfile,
+            // to: nickname,
         },
         {
             icon: <FontAwesomeIcon icon={faCoins} />,
@@ -270,7 +276,7 @@ function Header() {
                     </div>
                 </div>
             </header>
-            {showAuthModal && <AuthModal />}
+            {showAuthModal && <AuthModal isOpen={showAuthModal} onClose={handleCloseModal} />}
         </>
     );
 }

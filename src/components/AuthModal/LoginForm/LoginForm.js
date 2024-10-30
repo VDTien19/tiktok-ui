@@ -1,6 +1,5 @@
 import classNames from 'classnames/bind';
 
-import Modal from '~/components/Modal';
 import styles from './Login.module.scss';
 import { useState } from 'react';
 import Button from '~/components/Button';
@@ -32,7 +31,7 @@ function LoginForm({ onClose, switchToRegister }) {
     };
 
     return (
-        <Modal isOpen={true} onClose={onClose} className={cx('modal-fadein')}>
+        <div>
             <div className={cx('wrapper')}>
                 <form className={cx('form')} onSubmit={handleSubmit}>
                     <h2 className={cx('title')}>Đăng nhập vào Tiktok</h2>
@@ -97,7 +96,7 @@ function LoginForm({ onClose, switchToRegister }) {
                     </strong>{' '}
                 </p>
             </div>
-        </Modal>
+        </div>
     );
 }
 

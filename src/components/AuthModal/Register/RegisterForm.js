@@ -1,25 +1,41 @@
 import classNames from 'classnames/bind';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-import Modal from '~/components/Modal';
 import styles from './Register.module.scss';
 import { useState } from 'react';
 import Button from '~/components/Button';
 import * as authRegister from '~/services/authServices';
 
+import { useAuth } from '~/context/AuthContext'
+
 const cx = classNames.bind(styles);
 
 function RegisterForm({ onClose, switchToLogin }) {
+
+    const { login } = useAuth();
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
 
     const navigate = useNavigate();
 
-    const handleRegisterSuccess = () => {
-        setUsername('');
-        setPassword('');
-        onClose();
+    const handleRegisterSuccess = async () => {
+        try {
+            await login(username, password);
+            toast.success("Register success", {
+                position: 'top-right',
+                autoClose: 3000
+            })
+
+            setUsername('');
+            setPassword('');
+            onClose();
+        } catch (error) {
+            setError(error.message);
+            console(">>> Register error: ", error)
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -42,7 +58,7 @@ function RegisterForm({ onClose, switchToLogin }) {
     };
 
     return (
-        <Modal isOpen={true} onClose={onClose}>
+        <>
             <div className={cx('wrapper')}>
                 <form className={cx('form')} onSubmit={handleSubmit}>
                     <h2 className={cx('title')}>Tạo tài khoản với Tiktok</h2>
@@ -104,7 +120,7 @@ function RegisterForm({ onClose, switchToLogin }) {
                     </strong>{' '}
                 </p>
             </div>
-        </Modal>
+        </>
     );
 }
 

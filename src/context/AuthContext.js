@@ -10,7 +10,7 @@ function useAuth() {
 function AuthProvider({ children }) {
     const [userData, setUserData] = useState(null); 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    // const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -27,7 +27,7 @@ function AuthProvider({ children }) {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        // setLoading(true);
+        setLoading(true);
         try {
             const result = await authServices.getCurrentUser(token);
             if (result) {
@@ -41,12 +41,12 @@ function AuthProvider({ children }) {
             console.log('>>> Fetch user data error:', err);
             logout(); // Đăng xuất nếu token không hợp lệ
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     };
 
     const login = async (email, password) => {
-        // setLoading(true);
+        setLoading(true);
         try {
             const result = await authServices.login(email, password);
             if (result) {
@@ -61,7 +61,7 @@ function AuthProvider({ children }) {
             console.log('>>> Login error:', err);
             setError('An error occurred during login.');
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     };
 
@@ -75,14 +75,14 @@ function AuthProvider({ children }) {
             console.log('>>> Logout error:', err);
             setError('An error occurred during logout.');
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     };
 
     const value = {
         userData,
         isAuthenticated,
-        // loading,
+        loading,
         error,
         login,
         logout,
