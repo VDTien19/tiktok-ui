@@ -14,6 +14,7 @@ import {
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { Link, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import styles from './Header.module.scss';
 import images from '~/assets/images';
@@ -146,9 +147,17 @@ function Header() {
         const confirmed = window.confirm("Are you sure you want to log out?");
         if (confirmed) {
             logout();
-            console.log('>>> Logout success');
+            toast.success("Logged out successfully!", {
+                position: "top-right",
+                autoClose: 3000,
+            });
+            // console.log('>>> Logout success');
         } else {
-            console.log('>>> Logout canceled');
+            toast.info("Logout canceled.", {
+                position: "top-right",
+                autoClose: 3000,
+            });
+            // console.log('>>> Logout canceled');
         }
     }
 
