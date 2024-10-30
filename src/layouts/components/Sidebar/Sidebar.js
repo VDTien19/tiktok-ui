@@ -8,11 +8,14 @@ import {
     FollowActiveIcon,
     LiveActiveIcon,
 } from '~/components/Icons';
+
+import { useAuth } from '~/context/AuthContext';
 import config from '~/config';
 import styles from './Sidebar.module.scss';
 import Menu, { MenuItem } from './Menu';
 import SuggestedAccounts from '~/components/SuggestedAccounts';
 import * as userService from '~/services/userService';
+import * as followServices from '~/services/followServices';
 
 const cx = classNames.bind(styles);
 
@@ -47,21 +50,44 @@ const MENU_ITEMS = [
 ];
 
 function Sidebar() {
+    const { isAuthenticated } = useAuth();
+
     const [suggestedUsers, setSuggestedUsers] = useState([]);
-    const [numPage, setNumPage] = useState(INIT_PAGE);
+    const [followingUsers, setFollowingUsers] = useState([]);
+    const [numPageSuggested, setNumPageSuggested] = useState(INIT_PAGE);
+    const [numPageFollowing, setNumPageFollowing] = useState(INIT_PAGE);
 
     useEffect(() => {
         const fetchApi = async () => {
-            const data = await userService.getSuggested({ page: numPage, perPage: PER_PAGE });
+            const data = await userService.getSuggested({
+                page: numPageSuggested,
+                perPage: PER_PAGE,
+            });
             setSuggestedUsers((prevUser) => [...prevUser, ...data]);
         };
         fetchApi();
-    }, [numPage]);
+    }, [numPageSuggested]);
 
-    const handleSeeMore = useCallback(() => {
-        setNumPage((prevPage) => prevPage + 1);
-        console.log('page: ', numPage);
-    }, [numPage])
+    useEffect(() => {
+        if (isAuthenticated) {
+            const fetchFollowingUsers = async () => {
+                const data = await followServices.getFollowing({
+                    page: numPageFollowing,
+                    perPage: PER_PAGE,
+                });
+                setFollowingUsers((prevUser) => [...prevUser, ...data]);
+            };
+            fetchFollowingUsers();
+        }
+    }, [isAuthenticated, numPageFollowing]);
+
+    const handleSeeMoreSuggested = useCallback(() => {
+        setNumPageSuggested((prevPage) => prevPage + 1);
+    }, []);
+
+    const handleSeeMoreFollowing = useCallback(() => {
+        setNumPageFollowing((prevPage) => prevPage + 1);
+    }, []);
 
     return (
         <aside className={cx('wrapper')}>
@@ -78,9 +104,15 @@ function Sidebar() {
             <SuggestedAccounts
                 label="Suggest Accounts"
                 data={suggestedUsers}
-                onSeeMore={handleSeeMore}
+                onSeeMore={handleSeeMoreSuggested}
             />
-            <SuggestedAccounts label="Following Accounts" />
+            {isAuthenticated && (
+                <SuggestedAccounts
+                    label="Following Accounts"
+                    data={followingUsers}
+                    onSeeMore={handleSeeMoreFollowing}
+                />
+            )}
         </aside>
     );
 }
