@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCircleQuestion,
     faCoins,
-    faEllipsisVertical,
     faGear,
     faGlobe,
     faKeyboard,
@@ -20,7 +19,7 @@ import styles from './Header.module.scss';
 import images from '~/assets/images';
 import Button from '~/components/Button';
 import Menu from '~/components/Popper/Menu';
-import { MailboxIcon, UploadIcon, InboxIcon } from '~/components/Icons';
+import { MailboxIcon, UploadIcon, InboxIcon, ThreeDotIcon } from '~/components/Icons';
 import Image from '~/components/Images';
 import Search from '../Search';
 import config from '~/config';
@@ -124,10 +123,10 @@ function Header() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    if (isAuthenticated) {
-        console.log('userData: ', userData);
-        console.log("isAuthenticated: ", isAuthenticated);
-    }
+    // if (isAuthenticated) {
+    //     console.log('userData: ', userData);
+    //     console.log("isAuthenticated: ", isAuthenticated);
+    // }
 
     // Handle logic
     const handleChangeMenu = (menuItem) => {
@@ -267,9 +266,7 @@ function Header() {
                         {!isAuthenticated && (
                             <Menu items={MENU_ITEMS} onChange={handleChangeMenu} >
                                 <button className={cx('more-btn')}>
-                                    <FontAwesomeIcon
-                                        icon={faEllipsisVertical}
-                                    />
+                                    <ThreeDotIcon className={cx('icon-three-dot')} />
                                 </button>
                             </Menu>
                         )}
