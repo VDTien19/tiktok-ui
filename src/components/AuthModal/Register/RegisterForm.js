@@ -7,12 +7,11 @@ import { useState } from 'react';
 import Button from '~/components/Button';
 import * as authRegister from '~/services/authServices';
 
-import { useAuth } from '~/context/AuthContext'
+import { useAuth } from '~/contexts/AuthContext';
 
 const cx = classNames.bind(styles);
 
 function RegisterForm({ onClose, switchToLogin }) {
-
     const { login } = useAuth();
 
     const [username, setUsername] = useState('');
@@ -24,17 +23,17 @@ function RegisterForm({ onClose, switchToLogin }) {
     const handleRegisterSuccess = async () => {
         try {
             await login(username, password);
-            toast.success("Register success", {
+            toast.success('Register success', {
                 position: 'top-right',
-                autoClose: 3000
-            })
+                autoClose: 3000,
+            });
 
             setUsername('');
             setPassword('');
             onClose();
         } catch (error) {
             setError(error.message);
-            console(">>> Register error: ", error)
+            console('>>> Register error: ', error);
         }
     };
 

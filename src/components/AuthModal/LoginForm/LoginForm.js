@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import styles from './Login.module.scss';
 import { useState } from 'react';
 import Button from '~/components/Button';
-import { useAuth } from '~/context/AuthContext';
+import { useAuth } from '~/contexts/AuthContext';
 
 const cx = classNames.bind(styles);
 
@@ -21,7 +21,7 @@ function LoginForm({ onClose, switchToRegister }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await login(username, password)
+            await login(username, password);
 
             handleLoginSuccess();
         } catch (err) {

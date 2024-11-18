@@ -19,11 +19,16 @@ import styles from './Header.module.scss';
 import images from '~/assets/images';
 import Button from '~/components/Button';
 import Menu from '~/components/Popper/Menu';
-import { MailboxIcon, UploadIcon, InboxIcon, ThreeDotIcon } from '~/components/Icons';
+import {
+    MailboxIcon,
+    UploadIcon,
+    InboxIcon,
+    ThreeDotIcon,
+} from '~/components/Icons';
 import Image from '~/components/Images';
 import Search from '../Search';
 import config from '~/config';
-import { useAuth } from '~/context/AuthContext';
+import { useAuth } from '~/contexts/AuthContext';
 import AuthModal from '~/components/AuthModal';
 
 // classname có thể viết '-'
@@ -148,22 +153,22 @@ function Header() {
     };
 
     const handleLogout = () => {
-        const confirmed = window.confirm("Are you sure you want to log out?");
+        const confirmed = window.confirm('Are you sure you want to log out?');
         if (confirmed) {
             logout();
-            toast.success("Logged out successfully!", {
-                position: "top-right",
+            toast.success('Logged out successfully!', {
+                position: 'top-right',
                 autoClose: 3000,
             });
             // console.log('>>> Logout success');
         } else {
-            toast.info("Logout canceled.", {
-                position: "top-right",
+            toast.info('Logout canceled.', {
+                position: 'top-right',
                 autoClose: 3000,
             });
             // console.log('>>> Logout canceled');
         }
-    }
+    };
 
     // let nickname;
     // if(location.pathname !== userData?.nickname) {
@@ -174,7 +179,7 @@ function Header() {
     // console.log('nickname: ', nickname);
 
     const handleViewProfile = () => {
-        console.log("Clicked !")
+        console.log('Clicked !');
         if (location.pathname !== userData?.nickname) {
             navigate(`@${userData?.nickname}`);
         }
@@ -255,7 +260,7 @@ function Header() {
                             </>
                         )}
                         {isAuthenticated && (
-                            <Menu items={USER_MENU} onChange={handleChangeMenu} >
+                            <Menu items={USER_MENU} onChange={handleChangeMenu}>
                                 <Image
                                     src={userData?.avatar}
                                     alt={userData?.nickname}
@@ -264,16 +269,23 @@ function Header() {
                             </Menu>
                         )}
                         {!isAuthenticated && (
-                            <Menu items={MENU_ITEMS} onChange={handleChangeMenu} >
+                            <Menu
+                                items={MENU_ITEMS}
+                                onChange={handleChangeMenu}
+                            >
                                 <button className={cx('more-btn')}>
-                                    <ThreeDotIcon className={cx('icon-three-dot')} />
+                                    <ThreeDotIcon
+                                        className={cx('icon-three-dot')}
+                                    />
                                 </button>
                             </Menu>
                         )}
                     </div>
                 </div>
             </header>
-            {showAuthModal && <AuthModal isOpen={showAuthModal} onClose={handleCloseModal} />}
+            {showAuthModal && (
+                <AuthModal isOpen={showAuthModal} onClose={handleCloseModal} />
+            )}
         </>
     );
 }

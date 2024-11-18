@@ -3,16 +3,19 @@ import ReactDOM from 'react-dom/client';
 import App from '~/App';
 import reportWebVitals from './reportWebVitals';
 import GlobalStyle from '~/components/GlobalStyle';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
+import { VideoProvider } from '~/contexts/VideoContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     // <React.StrictMode>
-        <GlobalStyle>
+    <GlobalStyle>
+        <VideoProvider>
             <AuthProvider>
                 <App />
             </AuthProvider>
-        </GlobalStyle>
+        </VideoProvider>
+    </GlobalStyle>,
     // </React.StrictMode>,
 );
 

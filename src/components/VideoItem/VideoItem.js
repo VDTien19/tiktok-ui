@@ -20,7 +20,7 @@ import images from '~/assets/images'
 
 const cx = classNames.bind(styles);
 
-function VideoItem({ src }) {
+function VideoItem({ data, index, onPlaying }) {
     const { volume, isMute, handleChangeVolume, toggleMute, handlePlay } =
         useVideo();
     const [isExpanded, setIsExpanded] = useState(false);
@@ -96,7 +96,7 @@ function VideoItem({ src }) {
                     <video
                         onClick={handlePlayPause}
                         ref={videoRef}
-                        src={src}
+                        src={data.file_url}
                         className={cx('video-url')}
                         loop
                     ></video>
@@ -106,9 +106,9 @@ function VideoItem({ src }) {
                         'footer-expanded': isExpanded
                     })}>
                         <div className={cx('name-date')}>
-                            <span className={cx('name')}>tiennemix</span>
+                            <span className={cx('name')}>{data.user.nickname}</span>
                             <span className={cx('dot-seperate')}> · </span>
-                            <span className={cx('date')}> 17-11-2024</span>
+                            <span className={cx('date')}> {data.published_at.split(' ')[0]}</span>
                         </div>
                         <div className={cx('desc-wrapper')}>
                             <div
@@ -117,36 +117,29 @@ function VideoItem({ src }) {
                                     collapsed: !isExpanded,
                                 })}
                             >
-                                Ah, tôi hiểu vấn đề của bạn rồi. Khi một video có tỷ
-                                lệ 16:9 hoặc bất kỳ tỷ lệ nào khác cao vượt quá màn
-                                hình, chúng ta cần giới hạn chiều cao của nó bằng
-                                chiều cao màn hình (viewport height). Đồng thời,
-                                chiều rộng của video sẽ tự động được điều chỉnh để
-                                giữ nguyên tỷ lệ mà không bị biến dạng. Ah, tôi hiểu
-                                vấn đề của bạn rồi. Khi một video có tỷ lệ 16:9 hoặc
-                                bất kỳ tỷ lệ nào khác cao vượt quá màn hình, chúng
-                                ta cần giới hạn chiều cao của nó bằng chiều cao màn
-                                hình (viewport height). Đồng thời, chiều rộng của
-                                video sẽ tự động được điều chỉnh để giữ nguyên tỷ lệ
-                                mà không bị biến dạng.
+                                {data.description}
                                 <span className={cx('hastag')}>
                                     <strong> #tiennemix #xuhuong</strong>
                                 </span>
                             </div>
-                            <button
-                                onClick={handleToggleButton}
-                                className={cx('toggle-button')}
-                            >
-                                {isExpanded ? 'ẩn bớt' : 'thêm'}
-                            </button>
+                            {data.description.length > 50 && (
+                                <button
+                                    onClick={handleToggleButton}
+                                    className={cx('toggle-button')}
+                                >
+                                    {isExpanded ? 'ẩn bớt' : 'thêm'}
+                                </button>
+                            )}
                         </div>
-                        <Link to="/" className={cx('music')}>
-                            <p className={cx('music-name')}>
-                                <MusicNoteIcon className={cx('music-icon')} />
-                                nhạc nền - Lạc trong ký ức - Thành Đạt
-                            </p>
-                            {/* <Image src="" className={cx('thumb-avatar')} /> */}
-                        </Link>
+                        {data.music.length >= 0 && (
+                            <Link to="/" className={cx('music')}>
+                                <p className={cx('music-name')}>
+                                    <MusicNoteIcon className={cx('music-icon')} />
+                                    nhạc nền {`${data.music}`}
+                                </p>
+                                {/* <Image src="" className={cx('thumb-avatar')} /> */}
+                            </Link>
+                        )}
                     </div>
                 </section>
     
@@ -155,8 +148,8 @@ function VideoItem({ src }) {
                     <div className={cx('follow-action')}>
                         <Link to="/">
                             <Image
-                                src="https://cdn.vinaenter.edu.vn/wp-content/uploads/2024/07/hinh-nen-dam-may-cute-1.jpg"
-                                alt=""
+                                src={data.user.avatar}
+                                alt={data.user.nickname}
                                 className={cx('avatar-img')}
                             />
                         </Link>
@@ -168,25 +161,25 @@ function VideoItem({ src }) {
                         <div className={cx('like-icon')}>
                             <HeartIcon />
                         </div>
-                        <span className={cx('like-count')}>28.7k</span>
+                        <span className={cx('like-count')}>{data.likes_count}</span>
                     </button>
                     <button className={cx('comment-action')}>
                         <div className={cx('comment-icon')}>
                             <Image src={images.commentIcon} className={cx('comment-img')} />
                         </div>
-                        <span className={cx('comment-count')}>2.4k</span>
+                        <span className={cx('comment-count')}>{data.comments_count}</span>
                     </button>
                     <button className={cx('favorite-action')}>
                         <div className={cx('favorite-icon')}>
                             <FavoriteIcon />
                         </div>
-                        <span className={cx('favorite-count')}>10k</span>
+                        <span className={cx('favorite-count')}>0</span>
                     </button>
                     <button className={cx('share-action')}>
                         <div className={cx('share-icon')}>
                             <ShareIcon />
                         </div>
-                        <span className={cx('share-count')}>1.2k</span>
+                        <span className={cx('share-count')}>{data.shares_count}</span>
                     </button>
                 </section>
             </div>

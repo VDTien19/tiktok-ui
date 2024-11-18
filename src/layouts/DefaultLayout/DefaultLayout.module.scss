@@ -6,13 +6,11 @@
 }
 
 .container {
+    display: flex; 
+    flex-direction: column;
     width: var(--default-layout-width);
     max-width: 100%;
     padding: 0 var(--default-layout-horizontal-spacer);
-}
-
-.container {
-    display: flex; 
 }
 
 .sidebar {
@@ -38,4 +36,7 @@
 
 .content {
     flex: 1;
+    max-width: calc(100% - var(--with-sidebar) - 60px);
+    position: relative;
+    left: calc(var(--with-sidebar) + 60px);
 }

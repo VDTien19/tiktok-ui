@@ -25,6 +25,8 @@
 
 html {
     font-size: 62.5%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 body {
@@ -33,7 +35,7 @@ body {
     line-height: 1.5;
     text-rendering: optimizeSpeed;
     color: var(--text-color);
-    overflow-y: overlay;
+    // overflow-y: overlay;
 }
 
 // Scrollbar CSS

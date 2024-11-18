@@ -9,7 +9,7 @@ import {
     LiveActiveIcon,
 } from '~/components/Icons';
 
-import { useAuth } from '~/context/AuthContext';
+import { useAuth } from '~/contexts/AuthContext';
 import config from '~/config';
 import styles from './Sidebar.module.scss';
 import Menu, { MenuItem } from './Menu';
