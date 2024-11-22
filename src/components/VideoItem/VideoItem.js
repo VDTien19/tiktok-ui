@@ -20,12 +20,59 @@ import images from '~/assets/images'
 
 const cx = classNames.bind(styles);
 
-function VideoItem({ data, index, onPlaying }) {
-    const { volume, isMute, handleChangeVolume, toggleMute, handlePlay } =
+function VideoItem({ data, index, onPlaying, playingIndex }) {
+    const { volume, isMute, handleChangeVolume, toggleMute } =
         useVideo();
+        
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const videoRef = useRef(null);
+
+    useEffect(() => {
+        const video = videoRef.current;
+
+        const handleIntersection = (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    onPlaying(index); // Thông báo video đang phát
+                    if (!isPlaying && (playingIndex === null || playingIndex === index)) {
+                        // Cố gắng phát video
+                        const playPromise = video?.play();
+                        if (playPromise !== undefined) {
+                            playPromise
+                                .then(() => {
+                                    setIsPlaying(true); // Phát thành công
+                                    // setIsAutoplayBlocked(false); // Autoplay không bị chặn
+                                })
+                                .catch(() => {
+                                    // setIsAutoplayBlocked(true); // Autoplay bị chặn
+                                });
+                        }
+                    }
+                } else {
+                    if (isPlaying) {
+                        video?.pause(); // Tạm dừng video
+                        setIsPlaying(false);
+                    }
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(handleIntersection, {
+            threshold: 0.6, // Ít nhất 60% video phải nằm trong viewport
+        });
+
+        if (video) {
+            observer.observe(video);
+        }
+
+        return () => {
+            if (video) {
+                observer.unobserve(video);
+            }
+        };
+    }, [index, onPlaying, playingIndex, isPlaying]);
 
     // Cập nhật âm lượng và trạng thái tắt tiếng cho video mỗi khi thay đổi
     useEffect(() => {
@@ -38,7 +85,7 @@ function VideoItem({ data, index, onPlaying }) {
     // Xử lý phát/tạm dừng video khi nhấn vào video
     const handlePlayPause = () => {
         if (videoRef.current.paused) {
-            handlePlay(videoRef.current); // Gọi handlePlay để tạm dừng các video khác
+            // handlePlay(videoRef.current); // Gọi handlePlay để tạm dừng các video khác
             videoRef.current.play(); // Phát video hiện tại
         } else {
             videoRef.current.pause();
