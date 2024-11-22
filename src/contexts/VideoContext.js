@@ -1,4 +1,4 @@
-import { useContext, createContext, useState, useRef } from "react";
+import { useEffect, useContext, createContext, useState, useRef } from "react";
 
 const VideoContext = createContext();
 
@@ -7,11 +7,19 @@ function useVideo() {
 }
 
 function VideoProvider({ children }) {
-    const [volume, setVolume] = useState(0.7); // Volume mặc định là 70% (0.7)
-    const [prevVolume, setPrevVolume] = useState(0.7); // Lưu giá trị volume trước đó
-    const [isMute, setIsMute] = useState(false); // Trạng thái tắt tiếng (mặc định bật âm)
+    const [volume, setVolume] = useState(0);
+    const [prevVolume, setPrevVolume] = useState(() => {
+        const savedPreVolume = localStorage.getItem('preVolume');
+        return savedPreVolume ? parseFloat(savedPreVolume) : 0.7;
+    }); // Lưu giá trị volume trước đó
+    const [isMute, setIsMute] = useState(true); // Trạng thái tắt tiếng (mặc định bật âm)
 
     const currentVideoRef = useRef(null);
+
+    // Lưu prevVolume và trạng thái muted vào localStorage khi thay đổi
+    useEffect(() => {
+        localStorage.setItem("preVolume", prevVolume); // Lưu âm lượng trước đó
+    }, [prevVolume]);
 
     // Xử lý thay đổi volume từ thanh trượt
     const handleChangeVolume = (e) => {
@@ -23,16 +31,24 @@ function VideoProvider({ children }) {
             setIsMute(true); // Nếu kéo xuống 0 -> tắt tiếng
         } else {
             setIsMute(false); // Khác 0 -> bật tiếng
+            setPrevVolume(newVolume);
         }
     };
 
     // Xử lý bật/tắt tiếng
     const toggleMute = () => {
         if (isMute) {
-            setVolume(prevVolume); // Nếu đang tắt, khôi phục volume trước đó
-            setIsMute(false);
+            // Nếu đang muted, khôi phục volume từ prevVolume
+            if (prevVolume > 0) {
+                setVolume(prevVolume);
+                setIsMute(false);
+            } else {
+                // Nếu prevVolume = 0, giữ nguyên trạng thái muted
+                setIsMute(true);
+            }
         } else {
-            setPrevVolume(volume); // Lưu giá trị volume hiện tại
+            // Nếu đang bật tiếng, lưu volume hiện tại vào prevVolume và mute
+            setPrevVolume(volume > 0 ? volume : 0.7); // Lưu lại volume hoặc mặc định 0.7
             setVolume(0); // Đặt volume về 0
             setIsMute(true);
         }
