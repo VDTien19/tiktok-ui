@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useRef, useEffect, useState } from 'react';
+import debounce from 'lodash.debounce';
 
 import styles from './VideoItem.module.scss';
 import {
@@ -31,47 +32,27 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
 
     useEffect(() => {
         const video = videoRef.current;
-
-        const handleIntersection = (entries) => {
+    
+        const handleIntersection = debounce((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     onPlaying(index); // Thông báo video đang phát
-                    if (!isPlaying && (playingIndex === null || playingIndex === index)) {
-                        // Cố gắng phát video
-                        const playPromise = video?.play();
-                        if (playPromise !== undefined) {
-                            playPromise
-                                .then(() => {
-                                    setIsPlaying(true); // Phát thành công
-                                    // setIsAutoplayBlocked(false); // Autoplay không bị chặn
-                                })
-                                .catch(() => {
-                                    // setIsAutoplayBlocked(true); // Autoplay bị chặn
-                                });
-                        }
+                    if (!isPlaying && playingIndex === index) {
+                        video.play().then(() => {
+                            setIsPlaying(true);
+                        }).catch(() => console.log("Failed to auto-play"));
                     }
                 } else {
-                    if (isPlaying) {
-                        video?.pause(); // Tạm dừng video
-                        setIsPlaying(false);
-                    }
+                    video.pause();
+                    setIsPlaying(false);
                 }
             });
-        };
-
-        const observer = new IntersectionObserver(handleIntersection, {
-            threshold: 0.6, // Ít nhất 60% video phải nằm trong viewport
-        });
-
-        if (video) {
-            observer.observe(video);
-        }
-
-        return () => {
-            if (video) {
-                observer.unobserve(video);
-            }
-        };
+        }, 300);
+    
+        const observer = new IntersectionObserver(handleIntersection, { threshold: 0.6 });
+        if (video) observer.observe(video);
+    
+        return () => observer.disconnect();
     }, [index, onPlaying, playingIndex, isPlaying]);
 
     // Cập nhật âm lượng và trạng thái tắt tiếng cho video mỗi khi thay đổi
@@ -146,6 +127,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                         src={data.file_url}
                         className={cx('video-url')}
                         loop
+                        muted
                     ></video>
     
                     {/* Footer hiển thị thông tin */}
@@ -182,7 +164,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                             <Link to="/" className={cx('music')}>
                                 <p className={cx('music-name')}>
                                     <MusicNoteIcon className={cx('music-icon')} />
-                                    nhạc nền {`${data.music}`}
+                                    nhạc nền {`${data.music.length > 0 ? data.music : data.user.nickname}`}
                                 </p>
                                 {/* <Image src="" className={cx('thumb-avatar')} /> */}
                             </Link>
