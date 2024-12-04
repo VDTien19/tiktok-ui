@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, memo } from 'react';
 import debounce from 'lodash.debounce';
 
 import styles from './VideoItem.module.scss';
@@ -47,7 +47,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                     setIsPlaying(false);
                 }
             });
-        }, 300);
+        }, 500);
     
         const observer = new IntersectionObserver(handleIntersection, { threshold: 0.6 });
         if (video) observer.observe(video);
@@ -75,11 +75,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
 
     // Xử lý ẩn hiện desc
     const handleToggleButton = () => {
-        if (isExpanded) {
-            setIsExpanded(false);
-        } else {
-            setIsExpanded(true);
-        }
+        setIsExpanded((prev) => !prev)
     };
 
     // Cập nhật CSS động cho thanh trượt
@@ -223,4 +219,5 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
 //     music: PropTypes.string, // Nhạc nền
 // };
 
-export default VideoItem;
+export default memo(VideoItem);
+
