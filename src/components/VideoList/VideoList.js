@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import classNames from 'classnames/bind';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import styles from './VideoList.module.scss';
 import { getListVideo } from '~/services/videoServices';
@@ -27,9 +28,11 @@ function VideoList() {
         fetchVideos();
     }, [page]);
 
-    const handlePlaying = (index) => {
-        setPlayingIndex(index);
-    };
+    const handlePlaying = useCallback((index) => {
+        if (playingIndex !== index) {
+            setPlayingIndex(index);
+        }
+    }, [playingIndex]);
 
     return (
         <div className={cx('wrapper')}>
