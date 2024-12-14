@@ -1,8 +1,8 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { useRef, useEffect, useState, memo } from 'react';
-import debounce from 'lodash.debounce';
+import { useEffect, useState, memo } from 'react';
 
+import { useVideoIntersection } from '~/hooks'
 import styles from './VideoItem.module.scss';
 import {
     OnSoundIcon,
@@ -13,6 +13,8 @@ import {
     HeartIcon,
     FavoriteIcon,
     ShareIcon,
+    PlayIcon,
+    PauseIcon
 } from '~/components/Icons';
 import { useVideo } from '~/contexts/VideoContext';
 import { Link } from 'react-router-dom';
@@ -27,33 +29,13 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
         
     const [isExpanded, setIsExpanded] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [showIcon, setShowIcon] = useState(null);
 
-    const videoRef = useRef(null);
+    // const videoRef = useRef(null);
 
-    useEffect(() => {
-        const video = videoRef.current;
-    
-        const handleIntersection = debounce((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    onPlaying(index); // Thông báo video đang phát
-                    if (!isPlaying && playingIndex === index) {
-                        video.play().then(() => {
-                            setIsPlaying(true);
-                        }).catch(() => console.log("Failed to auto-play"));
-                    }
-                } else {
-                    video.pause();
-                    setIsPlaying(false);
-                }
-            });
-        }, 500);
-    
-        const observer = new IntersectionObserver(handleIntersection, { threshold: 0.6 });
-        if (video) observer.observe(video);
-    
-        return () => observer.disconnect();
-    }, [index, onPlaying, playingIndex, isPlaying]);
+    const { videoRef } = useVideoIntersection(index, playingIndex, onPlaying);
+
+    console.log("isPlaying: " + isPlaying);
 
     // Cập nhật âm lượng và trạng thái tắt tiếng cho video mỗi khi thay đổi
     useEffect(() => {
@@ -61,16 +43,29 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
             videoRef.current.volume = volume;
             videoRef.current.muted = isMute;
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [volume, isMute]);
 
     // Xử lý phát/tạm dừng video khi nhấn vào video
     const handlePlayPause = () => {
         if (videoRef.current.paused) {
             // handlePlay(videoRef.current); // Gọi handlePlay để tạm dừng các video khác
+            setIsPlaying(true);
             videoRef.current.play(); // Phát video hiện tại
+            triggerIconAnimation('play');
         } else {
+            setIsPlaying(false);
             videoRef.current.pause();
+            triggerIconAnimation('pause');
         }
+    };
+
+    // Trigger icon animation temporarily
+    const triggerIconAnimation = (type) => {
+        setShowIcon(type); // Show "play" or "pause" icon
+        setTimeout(() => {
+            setShowIcon(null); // Hide icon after animation
+        }, 500); // Duration matches the animation
     };
 
     // Xử lý ẩn hiện desc
@@ -125,6 +120,17 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                         loop
                         muted
                     ></video>
+
+                    {showIcon && (
+                        <div
+                            className={cx('icon-play-pause', {
+                                show: showIcon === 'play',
+                                hide: showIcon === 'pause',
+                            })}
+                        >
+                            {showIcon === 'play' ? <PlayIcon /> : <PauseIcon />}
+                        </div>
+                    )}
     
                     {/* Footer hiển thị thông tin */}
                     <div className={cx('footer', {

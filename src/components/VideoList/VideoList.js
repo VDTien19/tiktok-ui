@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import classNames from 'classnames/bind';
-import { useEffect, useState, useCallback, memo } from 'react';
+import { useEffect, useState, useCallback, memo, useRef } from 'react';
+import { throttle } from 'lodash';
+import LazyLoad from 'react-lazyload';
 
 import styles from './VideoList.module.scss';
 import { getListVideo } from '~/services/videoServices';
@@ -25,16 +27,19 @@ function VideoList() {
         }
     };
 
-    function handleScrool() {
-        if (window.scrollY + window.innerHeight >= document.body.offsetHeight) {
-            setPage((page) => page + 1);
-        }
-    }
+    const handleScroll = useCallback(
+        throttle(() => {
+            if (window.scrollY + window.innerHeight >= document.body.offsetHeight - 100) {
+                setPage((prevPage) => prevPage + 1);
+            }
+        }, 300), // Throttle 300ms
+        [],
+    );
 
     useEffect(() => {
-        window.addEventListener('scroll', handleScrool);
+        window.addEventListener('scroll', handleScroll);
         return () => {
-            window.removeEventListener('scroll', handleScrool);
+            window.removeEventListener('scroll', handleScroll);
         };
     }, [page]);
 
@@ -42,27 +47,30 @@ function VideoList() {
         fetchVideos();
     }, [page]);
 
-    const handlePlaying = useCallback(
-        (index) => {
-            if (playingIndex !== index) {
-                setPlayingIndex(index);
-            }
-        },
-        [playingIndex],
-    );
+    const playingIndexRef = useRef(null);
+
+    const handlePlaying = useCallback((index) => {
+        if (playingIndexRef.current !== index) {
+            playingIndexRef.current = index;
+            setPlayingIndex(index);
+        }
+    }, []);
+
 
     return (
-        <div className={cx('wrapper')}>
-            {videos.map((video, index) => (
-                <VideoItem
-                    key={index}
-                    data={video}
-                    index={index}
-                    onPlaying={handlePlaying}
-                    playingIndex={playingIndex}
-                />
-            ))}
-        </div>
+        <LazyLoad height={500} offset={300}>
+            <div className={cx('wrapper')}>
+                {videos.map((video, index) => (
+                    <VideoItem
+                        key={index}
+                        data={video}
+                        index={index}
+                        onPlaying={handlePlaying}
+                        playingIndex={playingIndex}
+                    />
+                ))}
+            </div>
+        </LazyLoad>
     );
 }
 
