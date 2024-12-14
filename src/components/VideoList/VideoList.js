@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import classNames from 'classnames/bind';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, memo } from 'react';
 
 import styles from './VideoList.module.scss';
 import { getListVideo } from '~/services/videoServices';
@@ -13,7 +13,8 @@ function VideoList() {
     const [page, setPage] = useState(15);
     const [playingIndex, setPlayingIndex] = useState(null);
 
-    console.log("playingIndex: ", playingIndex)
+    // console.log("playingIndex: ", playingIndex)
+    console.log("page: ", page);
 
     const fetchVideos = async () => {
         try {
@@ -24,21 +25,37 @@ function VideoList() {
         }
     };
 
+    function handleScrool() {
+        if (window.scrollY + window.innerHeight >= document.body.offsetHeight) {
+            setPage((page) => page + 1);
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScrool);
+        return () => {
+            window.removeEventListener('scroll', handleScrool);
+        };
+    }, [page]);
+
     useEffect(() => {
         fetchVideos();
     }, [page]);
 
-    const handlePlaying = useCallback((index) => {
-        if (playingIndex !== index) {
-            setPlayingIndex(index);
-        }
-    }, [playingIndex]);
+    const handlePlaying = useCallback(
+        (index) => {
+            if (playingIndex !== index) {
+                setPlayingIndex(index);
+            }
+        },
+        [playingIndex],
+    );
 
     return (
         <div className={cx('wrapper')}>
             {videos.map((video, index) => (
                 <VideoItem
-                    key={video.id}
+                    key={index}
                     data={video}
                     index={index}
                     onPlaying={handlePlaying}
@@ -49,4 +66,4 @@ function VideoList() {
     );
 }
 
-export default VideoList;
+export default memo(VideoList);
