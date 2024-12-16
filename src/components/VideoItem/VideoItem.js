@@ -32,8 +32,9 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
     const [showIcon, setShowIcon] = useState(null);
 
     // const videoRef = useRef(null);
-
+    
     const { videoRef } = useVideoIntersection(index, playingIndex, onPlaying);
+    // console.log(videoRef.current.duration)
 
     console.log("isPlaying: " + isPlaying);
 
@@ -60,12 +61,12 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
         }
     };
 
-    // Trigger icon animation temporarily
+    // Kích hoạt icon phát/dừng
     const triggerIconAnimation = (type) => {
-        setShowIcon(type); // Show "play" or "pause" icon
+        setShowIcon(type);
         setTimeout(() => {
-            setShowIcon(null); // Hide icon after animation
-        }, 500); // Duration matches the animation
+            setShowIcon(null);
+        }, 500);
     };
 
     // Xử lý ẩn hiện desc
@@ -73,8 +74,8 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
         setIsExpanded((prev) => !prev)
     };
 
-    // Cập nhật CSS động cho thanh trượt
-    const sliderBackground = {
+    // CSS động cho âm lượng
+    const sliderBackgroundSound = {
         background: `linear-gradient(to right, #fff ${
             volume * 100
         }%, rgba(255, 255, 255, 0.34) ${volume * 100}%)`,
@@ -105,7 +106,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                                     value={volume * 100}
                                     onChange={handleChangeVolume}
                                     className={cx('sound-slider')}
-                                    style={sliderBackground}
+                                    style={sliderBackgroundSound}
                                 />
                             </div>
                         </div>
@@ -120,6 +121,8 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                         loop
                         muted
                     ></video>
+
+                    {/* <input type="range" value={videoRef.current.currentTime} className={cx("video-length")} min="0" max={videoRef.current.duration} step="0.1" /> */}
 
                     {showIcon && (
                         <div
