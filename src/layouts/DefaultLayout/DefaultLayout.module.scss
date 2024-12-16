@@ -39,4 +39,5 @@
     max-width: calc(100% - var(--with-sidebar) - 60px);
     position: relative;
     left: calc(var(--with-sidebar) + 60px);
+    padding-right: 240px;
 }
