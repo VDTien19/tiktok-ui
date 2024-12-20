@@ -1,9 +1,8 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import debounce from 'lodash.debounce';
 
 const useVideoIntersection = (index, playingIndex, onPlaying) => {
     const videoRef = useRef(null);
-    // const [isPlaying, setIsPlaying] = useState(false);
 
     useEffect(() => {
         const video = videoRef.current;
@@ -14,11 +13,9 @@ const useVideoIntersection = (index, playingIndex, onPlaying) => {
                     onPlaying(index);
                     if (playingIndex === index) {
                         video.play();
-                        // setIsPlaying(true);
                     }
                 } else {
                     video.pause();
-                    // setIsPlaying(false);
                 }
             });
         }, 500);
