@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useEffect, useState, memo } from 'react';
 
-import { useVideoIntersection } from '~/hooks'
+import { useVideoIntersection } from '~/hooks';
 import styles from './VideoItem.module.scss';
 import {
     OnSoundIcon,
@@ -11,51 +11,50 @@ import {
     MusicNoteIcon,
     AddIcon,
     HeartIcon,
+    HeartIconActive,
     FavoriteIcon,
     ShareIcon,
     PlayIcon,
-    PauseIcon
+    PauseIcon,
 } from '~/components/Icons';
 import { useVideo } from '~/contexts/VideoContext';
 import { Link } from 'react-router-dom';
 import Image from '~/components/Images';
-import images from '~/assets/images'
+import images from '~/assets/images';
+import { useLike } from '~/hooks';
 
 const cx = classNames.bind(styles);
 
 function VideoItem({ data, index, onPlaying, playingIndex }) {
-    const { volume, isMute, handleChangeVolume, toggleMute } =
-        useVideo();
-        
+    const { volume, isMute, handleChangeVolume, toggleMute } = useVideo();
+
+    const { isLiked, likeCount, toggleLike } = useLike(
+        data.is_liked,
+        data.likes_count,
+        data.id,
+    );
+
     const [isExpanded, setIsExpanded] = useState(false);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [showIcon, setShowIcon] = useState(null);
+    const [effectPlayPause, setEffectPlayPause] = useState(null);
 
-    // const videoRef = useRef(null);
-    
     const { videoRef } = useVideoIntersection(index, playingIndex, onPlaying);
-    // console.log(videoRef.current.duration)
 
-    console.log("isPlaying: " + isPlaying);
-
-    // Cập nhật âm lượng và trạng thái tắt tiếng cho video mỗi khi thay đổi
+    // Cập nhật âm lượng và trạng thái tắt tiếng cho video
     useEffect(() => {
         if (videoRef.current) {
             videoRef.current.volume = volume;
             videoRef.current.muted = isMute;
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [volume, isMute]);
 
     // Xử lý phát/tạm dừng video khi nhấn vào video
     const handlePlayPause = () => {
         if (videoRef.current.paused) {
-            // handlePlay(videoRef.current); // Gọi handlePlay để tạm dừng các video khác
-            setIsPlaying(true);
-            videoRef.current.play(); // Phát video hiện tại
+            videoRef.current.play();
             triggerIconAnimation('play');
         } else {
-            setIsPlaying(false);
+            // setIsPlaying(false);
             videoRef.current.pause();
             triggerIconAnimation('pause');
         }
@@ -63,15 +62,15 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
 
     // Kích hoạt icon phát/dừng
     const triggerIconAnimation = (type) => {
-        setShowIcon(type);
+        setEffectPlayPause(type);
         setTimeout(() => {
-            setShowIcon(null);
+            setEffectPlayPause(null);
         }, 500);
     };
 
     // Xử lý ẩn hiện desc
     const handleToggleButton = () => {
-        setIsExpanded((prev) => !prev)
+        setIsExpanded((prev) => !prev);
     };
 
     // CSS động cho âm lượng
@@ -112,7 +111,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                         </div>
                         <ThreeDotIcon className={cx('three-dot-icon')} />
                     </div>
-    
+
                     <video
                         onClick={handlePlayPause}
                         ref={videoRef}
@@ -124,25 +123,36 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
 
                     {/* <input type="range" value={videoRef.current.currentTime} className={cx("video-length")} min="0" max={videoRef.current.duration} step="0.1" /> */}
 
-                    {showIcon && (
+                    {effectPlayPause && (
                         <div
                             className={cx('icon-play-pause', {
-                                show: showIcon === 'play',
-                                hide: showIcon === 'pause',
+                                show: effectPlayPause === 'play',
+                                hide: effectPlayPause === 'pause',
                             })}
                         >
-                            {showIcon === 'play' ? <PlayIcon /> : <PauseIcon />}
+                            {effectPlayPause === 'play' ? (
+                                <PlayIcon />
+                            ) : (
+                                <PauseIcon />
+                            )}
                         </div>
                     )}
-    
+
                     {/* Footer hiển thị thông tin */}
-                    <div className={cx('footer', {
-                        'footer-expanded': isExpanded
-                    })}>
+                    <div
+                        className={cx('footer', {
+                            'footer-expanded': isExpanded,
+                        })}
+                    >
                         <div className={cx('name-date')}>
-                            <span className={cx('name')}>{data.user.nickname}</span>
+                            <span className={cx('name')}>
+                                {data.user.nickname}
+                            </span>
                             <span className={cx('dot-seperate')}> · </span>
-                            <span className={cx('date')}> {data.published_at.split(' ')[0]}</span>
+                            <span className={cx('date')}>
+                                {' '}
+                                {data.published_at.split(' ')[0]}
+                            </span>
                         </div>
                         <div className={cx('desc-wrapper')}>
                             <div
@@ -168,19 +178,26 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                         {data.music.length >= 0 && (
                             <Link to="/" className={cx('music')}>
                                 <p className={cx('music-name')}>
-                                    <MusicNoteIcon className={cx('music-icon')} />
-                                    nhạc nền {`${data.music.length > 0 ? data.music : data.user.nickname}`}
+                                    <MusicNoteIcon
+                                        className={cx('music-icon')}
+                                    />
+                                    nhạc nền{' '}
+                                    {`${
+                                        data.music.length > 0
+                                            ? data.music
+                                            : data.user.nickname
+                                    }`}
                                 </p>
                                 {/* <Image src="" className={cx('thumb-avatar')} /> */}
                             </Link>
                         )}
                     </div>
                 </section>
-    
+
                 {/* Action bar */}
                 <section className={cx('action-bar')}>
                     <div className={cx('follow-action')}>
-                        <Link to="/">
+                        <Link to={`/@${data.user.nickname}`}>
                             <Image
                                 src={data.user.avatar}
                                 alt={data.user.nickname}
@@ -191,17 +208,28 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                             <AddIcon className={cx('add-icon')} />
                         </button>
                     </div>
-                    <button className={cx('like-action')}>
+                    <button onClick={toggleLike} className={cx('like-action')}>
                         <div className={cx('like-icon')}>
-                            <HeartIcon />
+                            {isLiked ? (
+                                <HeartIconActive
+                                    className={cx('like-icon-active')}
+                                />
+                            ) : (
+                                <HeartIcon />
+                            )}
                         </div>
-                        <span className={cx('like-count')}>{data.likes_count}</span>
+                        <span className={cx('like-count')}>{likeCount}</span>
                     </button>
                     <button className={cx('comment-action')}>
                         <div className={cx('comment-icon')}>
-                            <Image src={images.commentIcon} className={cx('comment-img')} />
+                            <Image
+                                src={images.commentIcon}
+                                className={cx('comment-img')}
+                            />
                         </div>
-                        <span className={cx('comment-count')}>{data.comments_count}</span>
+                        <span className={cx('comment-count')}>
+                            {data.comments_count}
+                        </span>
                     </button>
                     <button className={cx('favorite-action')}>
                         <div className={cx('favorite-icon')}>
@@ -213,7 +241,9 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                         <div className={cx('share-icon')}>
                             <ShareIcon />
                         </div>
-                        <span className={cx('share-count')}>{data.shares_count}</span>
+                        <span className={cx('share-count')}>
+                            {data.shares_count}
+                        </span>
                     </button>
                 </section>
             </div>
@@ -229,4 +259,3 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
 // };
 
 export default memo(VideoItem);
-
