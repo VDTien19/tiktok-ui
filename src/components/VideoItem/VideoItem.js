@@ -36,7 +36,11 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
 
     const [isExpanded, setIsExpanded] = useState(false);
     const [effectPlayPause, setEffectPlayPause] = useState(null);
+
+    // Thanh tiến trình
     const [progress, setProgress] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
 
     const { videoRef } = useVideoIntersection(index, playingIndex, onPlaying);
 
@@ -44,18 +48,18 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
         if(videoRef.current) {
             const duration = videoRef.current.duration;
             const currentTime = videoRef.current.currentTime;
-            setProgress(currentTime / duration * 100);
+            setCurrentTime(currentTime)
+            setDuration(duration)
+            setProgress((currentTime / duration) * 100);
         }
     }
 
     const handleSeek = (e) => {
         if(videoRef.current) {
-            const rect = e.target.getBoundingClientRect();  // Kích thước thanh chạy
-            const offsetX = e.clientX - rect.left;   // vị trí click
-            const width = rect.width;
-            const seekTime = (offsetX / width) * videoRef.current.duration;
-            videoRef.current.currentTime = seekTime;
-            setProgress(seekTime / videoRef.current.duration * 100);
+            const seekValue = e.target.value;
+            const newTime = (seekValue / 100) * videoRef.current.duration;
+            videoRef.current.currentTime = newTime;
+            setProgress(seekValue)
         }
     }
 
@@ -155,11 +159,19 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                         muted
                     ></video>
 
-                    <div className={cx('progress-bar')} onClick={handleSeek} >
-                        <div
+                    <div className={cx('progress-bar')}>
+                        <input 
+                            type="range" 
                             className={cx('progress')}
-                            style={{ width: `${progress}%` }}
-                        ></div>
+                            min="0"
+                            max="100"
+                            value={progress}
+                            step="0.1"
+                            style={{
+                                background: `linear-gradient(to right, #fe2c55 ${progress}%, rgba(207, 207, 207, 0.7) ${progress}%)`,
+                            }}
+                            onChange={handleSeek}
+                        />
                     </div>
 
                     {effectPlayPause && (

@@ -33,6 +33,7 @@
     justify-content: center;
     align-items: center;
     overflow: visible;
+    clip-path: inset(0px round 1rem 1rem 1rem 1rem);
 }
 
 // Header video
@@ -117,8 +118,8 @@
     &::before {
         content: '';
         position: absolute;
-        top: -8px; /* Increase the clickable area above */
-        bottom: -8px; /* Increase the clickable area below */
+        top: -8px;
+        bottom: -8px;
         left: -5px;
         right: 0;
         background-color: transparent;
@@ -148,16 +149,9 @@
     color: var(--white);
 }
 
-.video-wrapper {
-    // position: relative;
-    // max-width: 90%;
-}
-
 .video-url {
     width: 100%;
-    // height: 100%;
     max-height: calc(100vh - var(--default-layout-header-heigh) - 40px);
-    border-radius: 16px;
     object-fit: contain;
     display: flex;
     align-items: center;
@@ -185,30 +179,56 @@
     }
 }
 
-.progress-bar {
-    display: flex;
-    clip-path: inset(0px round 0px 0px 1rem 1rem);
+.progress {
     position: absolute;
     bottom: 0;
     left: 0;
-    background-color: rgba(134, 134, 134, 0.8);
+    -webkit-appearance: none;
+    appearance: none;
     width: 100%;
-    height: 5px;
-    z-index: 2;
+    align-items: center;
+    height: 4px;
+    outline: none;
+    border-radius: 2px;
     cursor: pointer;
+    transition: background 0.3s;
+    z-index: 2;
+    // clip-path: inset(0px round 0px 0px 1rem 1rem);
 
     &:hover {
-        transition: height .2s linear;
-        height: 7px;
+        height: 6px;
+        transition: height .2s ease-in;
+        background: linear-gradient(to right, #fe2c55, #ffcccc);
     }
 
-    .progress {
-        padding: 2px 0;
-        width: 100%;
-        height: 100%;
-        background-color: var(--primary);
-        transition: width 150ms linear;
+    &:hover::-webkit-slider-thumb {
+        display: block;
     }
+
+    &:hover::-moz-range-thumb {
+        display: block;
+    }
+}
+
+.progress::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    display: none;
+}
+
+.progress::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    display: none;
 }
 
 // Footer video

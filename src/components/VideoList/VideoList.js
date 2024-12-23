@@ -10,9 +10,11 @@ import VideoItem from '~/components/VideoItem';
 
 const cx = classNames.bind(styles);
 
+const initPage = Math.floor(Math.random() * 10);
+
 function VideoList() {
     const [videos, setVideos] = useState([]);
-    const [page, setPage] = useState(15);
+    const [page, setPage] = useState(initPage);
     const [playingIndex, setPlayingIndex] = useState(null);
 
     // console.log("playingIndex: ", playingIndex)
