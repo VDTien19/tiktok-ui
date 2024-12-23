@@ -36,8 +36,42 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
 
     const [isExpanded, setIsExpanded] = useState(false);
     const [effectPlayPause, setEffectPlayPause] = useState(null);
+    const [progress, setProgress] = useState(0);
 
     const { videoRef } = useVideoIntersection(index, playingIndex, onPlaying);
+
+    const handleTimeUpdate = () => {
+        if(videoRef.current) {
+            const duration = videoRef.current.duration;
+            const currentTime = videoRef.current.currentTime;
+            setProgress(currentTime / duration * 100);
+        }
+    }
+
+    const handleSeek = (e) => {
+        if(videoRef.current) {
+            const rect = e.target.getBoundingClientRect();  // Kích thước thanh chạy
+            const offsetX = e.clientX - rect.left;   // vị trí click
+            const width = rect.width;
+            const seekTime = (offsetX / width) * videoRef.current.duration;
+            videoRef.current.currentTime = seekTime;
+            setProgress(seekTime / videoRef.current.duration * 100);
+        }
+    }
+
+    useEffect(() => {
+        const videoElement = videoRef.current;
+        if (videoElement) {
+            videoElement.addEventListener('timeupdate', handleTimeUpdate);
+        }
+
+        // Cleanup khi component unmount
+        return () => {
+            if (videoElement) {
+                videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+            }
+        };
+    }, [videoRef])
 
     // Cập nhật âm lượng và trạng thái tắt tiếng cho video
     useEffect(() => {
@@ -121,7 +155,12 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                         muted
                     ></video>
 
-                    {/* <input type="range" value={videoRef.current.currentTime} className={cx("video-length")} min="0" max={videoRef.current.duration} step="0.1" /> */}
+                    <div className={cx('progress-bar')} onClick={handleSeek} >
+                        <div
+                            className={cx('progress')}
+                            style={{ width: `${progress}%` }}
+                        ></div>
+                    </div>
 
                     {effectPlayPause && (
                         <div
@@ -163,7 +202,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                             >
                                 {data.description}
                                 <span className={cx('hastag')}>
-                                    <strong> #tiennemix #xuhuong</strong>
+                                    <strong> #xuhuong</strong>
                                 </span>
                             </div>
                             {data.description.length > 50 && (

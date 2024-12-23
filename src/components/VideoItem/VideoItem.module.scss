@@ -185,11 +185,30 @@
     }
 }
 
-.video-length {
+.progress-bar {
+    display: flex;
+    clip-path: inset(0px round 0px 0px 1rem 1rem);
     position: absolute;
     bottom: 0;
+    left: 0;
+    background-color: rgba(134, 134, 134, 0.8);
     width: 100%;
-    margin-bottom: -4px;
+    height: 5px;
+    z-index: 2;
+    cursor: pointer;
+
+    &:hover {
+        transition: height .2s linear;
+        height: 7px;
+    }
+
+    .progress {
+        padding: 2px 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--primary);
+        transition: width 150ms linear;
+    }
 }
 
 // Footer video
@@ -415,6 +434,7 @@
 .like-icon-active {
     animation: heartEffect 0.6s ease-out;
     transition: animation 0.3s ease-in-out;
+    pointer-events: none;
 }
 
 @keyframes heartEffect {
@@ -422,12 +442,16 @@
         transform: scale(0.3);
         opacity: 0.3;
     }
-    50% {
+    33% {
         transform: scale(1.3);
         opacity: 0.8;
     }
-    100% {
-        transform: scale(1);
+    66% {
+        transform: scale(0.7);
         opacity: 1;
     }
+    100% {
+        transform: scale(1);
+    }
 }
+
