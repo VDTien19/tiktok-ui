@@ -203,13 +203,13 @@
         background: linear-gradient(to right, #fe2c55, #ffcccc);
     }
 
-    // &:hover::-webkit-slider-thumb {
-    //     display: block;
-    // }
+    &:hover::-webkit-slider-thumb {
+        display: block;
+    }
 
-    // &:hover::-moz-range-thumb {
-    //     display: block;
-    // }
+    &:hover::-moz-range-thumb {
+        display: block;
+    }
 }
 
 .progress::-webkit-slider-thumb {

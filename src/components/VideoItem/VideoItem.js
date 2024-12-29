@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { useEffect, useState, useRef, memo } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import ActionBar from '~/components/ActionBar'
@@ -26,18 +26,15 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
 
     // Thanh tiến trình
     const [progress, setProgress] = useState(0);
-    const progressBarRef = useRef(null);
-    const progressRef = useRef(0); // giá trị progress
 
     const { videoRef } = useVideoIntersection(index, playingIndex, onPlaying);
 
     const handleTimeUpdate = () => {
-        if(videoRef.current && progressBarRef.current) {
+        if(videoRef.current) {
             const duration = videoRef.current.duration;
             const currentTime = videoRef.current.currentTime;
             const newProgress = (currentTime / duration) * 100;
-            progressBarRef.current.style.background = `linear-gradient(to right, #fe2c55 ${newProgress}%, rgba(207, 207, 207, 0.7) ${newProgress}%)`;
-            progressRef.current = newProgress;
+            setProgress(newProgress);
         }
     }
 
@@ -129,7 +126,6 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                                     min="0"
                                     max="100"
                                     value={volume * 100}
-                                    ref={progressBarRef}
                                     onChange={handleChangeVolume}
                                     className={cx('sound-slider')}
                                     style={sliderBackgroundSound}
@@ -155,7 +151,6 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                             min="0"
                             max="100"
                             value={progress}
-                            ref={progressBarRef}
                             step="0.1"
                             style={{
                                 background: `linear-gradient(to right, #fe2c55 ${progress}%, rgba(207, 207, 207, 0.7) ${progress}%)`,
