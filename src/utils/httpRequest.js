@@ -27,6 +27,11 @@ export const post = async (path, body = {}, options = {}) => {
     return respone.data;
 };
 
+export const patch = async (path, body = {}, options = {}) => {
+    const respone = await httpRequest.patch(path, body, options);
+    return respone.data;
+}
+
 export const deleted = async (path, body = {}, options = {}) => {
     const respone = await httpRequest.delete(path, body, options);
     return respone.data;
