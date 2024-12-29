@@ -1,7 +1,9 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { useEffect, useState, memo } from 'react';
+import { useEffect, useState, useRef, memo } from 'react';
+import { Link } from 'react-router-dom';
 
+import ActionBar from '~/components/ActionBar'
 import { useVideoIntersection } from '~/hooks';
 import styles from './VideoItem.module.scss';
 import {
@@ -9,48 +11,33 @@ import {
     MutedIcon,
     ThreeDotIcon,
     MusicNoteIcon,
-    AddIcon,
-    HeartIcon,
-    HeartIconActive,
-    FavoriteIcon,
-    ShareIcon,
     PlayIcon,
     PauseIcon,
 } from '~/components/Icons';
 import { useVideo } from '~/contexts/VideoContext';
-import { Link } from 'react-router-dom';
-import Image from '~/components/Images';
-import images from '~/assets/images';
-import { useLike } from '~/hooks';
 
 const cx = classNames.bind(styles);
 
 function VideoItem({ data, index, onPlaying, playingIndex }) {
     const { volume, isMute, handleChangeVolume, toggleMute } = useVideo();
 
-    const { isLiked, likeCount, toggleLike } = useLike(
-        data.is_liked,
-        data.likes_count,
-        data.id,
-    );
-
     const [isExpanded, setIsExpanded] = useState(false);
     const [effectPlayPause, setEffectPlayPause] = useState(null);
 
     // Thanh tiến trình
     const [progress, setProgress] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
+    const progressBarRef = useRef(null);
+    const progressRef = useRef(0); // giá trị progress
 
     const { videoRef } = useVideoIntersection(index, playingIndex, onPlaying);
 
     const handleTimeUpdate = () => {
-        if(videoRef.current) {
+        if(videoRef.current && progressBarRef.current) {
             const duration = videoRef.current.duration;
             const currentTime = videoRef.current.currentTime;
-            setCurrentTime(currentTime)
-            setDuration(duration)
-            setProgress((currentTime / duration) * 100);
+            const newProgress = (currentTime / duration) * 100;
+            progressBarRef.current.style.background = `linear-gradient(to right, #fe2c55 ${newProgress}%, rgba(207, 207, 207, 0.7) ${newProgress}%)`;
+            progressRef.current = newProgress;
         }
     }
 
@@ -75,6 +62,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                 videoElement.removeEventListener('timeupdate', handleTimeUpdate);
             }
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [videoRef])
 
     // Cập nhật âm lượng và trạng thái tắt tiếng cho video
@@ -141,6 +129,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                                     min="0"
                                     max="100"
                                     value={volume * 100}
+                                    ref={progressBarRef}
                                     onChange={handleChangeVolume}
                                     className={cx('sound-slider')}
                                     style={sliderBackgroundSound}
@@ -166,6 +155,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                             min="0"
                             max="100"
                             value={progress}
+                            ref={progressBarRef}
                             step="0.1"
                             style={{
                                 background: `linear-gradient(to right, #fe2c55 ${progress}%, rgba(207, 207, 207, 0.7) ${progress}%)`,
@@ -246,67 +236,18 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                 </section>
 
                 {/* Action bar */}
-                <section className={cx('action-bar')}>
-                    <div className={cx('follow-action')}>
-                        <Link to={`/@${data.user.nickname}`}>
-                            <Image
-                                src={data.user.avatar}
-                                alt={data.user.nickname}
-                                className={cx('avatar-img')}
-                            />
-                        </Link>
-                        <button className={cx('follow-btn')}>
-                            <AddIcon className={cx('add-icon')} />
-                        </button>
-                    </div>
-                    <button onClick={toggleLike} className={cx('like-action')}>
-                        <div className={cx('like-icon')}>
-                            {isLiked ? (
-                                <HeartIconActive
-                                    className={cx('like-icon-active')}
-                                />
-                            ) : (
-                                <HeartIcon />
-                            )}
-                        </div>
-                        <span className={cx('like-count')}>{likeCount}</span>
-                    </button>
-                    <button className={cx('comment-action')}>
-                        <div className={cx('comment-icon')}>
-                            <Image
-                                src={images.commentIcon}
-                                className={cx('comment-img')}
-                            />
-                        </div>
-                        <span className={cx('comment-count')}>
-                            {data.comments_count}
-                        </span>
-                    </button>
-                    <button className={cx('favorite-action')}>
-                        <div className={cx('favorite-icon')}>
-                            <FavoriteIcon />
-                        </div>
-                        <span className={cx('favorite-count')}>0</span>
-                    </button>
-                    <button className={cx('share-action')}>
-                        <div className={cx('share-icon')}>
-                            <ShareIcon />
-                        </div>
-                        <span className={cx('share-count')}>
-                            {data.shares_count}
-                        </span>
-                    </button>
-                </section>
+                <ActionBar data={data} followAction={true} />
+                
             </div>
         </article>
     );
 }
 
-// VideoItem.propTypes = {
-//     src: PropTypes.string.isRequired, // Đường dẫn video
-//     username: PropTypes.string.isRequired, // Tên người dùng
-//     description: PropTypes.string, // Mô tả video
-//     music: PropTypes.string, // Nhạc nền
-// };
+VideoItem.propTypes = {
+    data: PropTypes.node.isRequired,
+    index: PropTypes.number,
+    onPlaying: PropTypes.func,
+    playingIndex: PropTypes.number
+};
 
 export default memo(VideoItem);
