@@ -10,7 +10,9 @@ const useVideoIntersection = (index, playingIndex, onPlaying) => {
         const handleIntersection = debounce((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    onPlaying(index);
+                    if (typeof onPlaying === 'function') {
+                        onPlaying(index);
+                    }
                     if (playingIndex === index) {
                         video.play();
                     }
