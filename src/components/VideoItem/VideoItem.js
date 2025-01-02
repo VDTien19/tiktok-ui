@@ -239,7 +239,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
 }
 
 VideoItem.propTypes = {
-    data: PropTypes.node.isRequired,
+    data: PropTypes.object.isRequired,
     index: PropTypes.number,
     onPlaying: PropTypes.func,
     playingIndex: PropTypes.number
