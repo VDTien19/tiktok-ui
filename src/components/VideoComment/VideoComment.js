@@ -21,6 +21,28 @@ function VideoComment({ videoData, index, playingIndex, onPlaying }) {
     const handleToggleButton = () => {
         setShowIconPause(!showIconPause);
     }
+
+    useEffect(() => {
+        const video = videoRef.current;
+
+        const handleLoadedMetadata = () => {
+            setShowIconPause(video.paused);
+        };
+
+        if (video) {
+            video.addEventListener('loadedmetadata', handleLoadedMetadata);
+            video.addEventListener('pause', () => setShowIconPause(true));
+            video.addEventListener('play', () => setShowIconPause(false));
+        }
+
+        return () => {
+            if (video) {
+                video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+                video.removeEventListener('pause', () => setShowIconPause(true));
+                video.removeEventListener('play', () => setShowIconPause(false));
+            }
+        };
+    }, []);
     
     const [progress, setProgress] = useState(0);
     const [totalMinutes, setTotalMinutes] = useState(0);
