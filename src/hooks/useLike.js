@@ -24,4 +24,4 @@ const useLike = (initialIsLiked, initialLikeCount, videoId) => {
     return { isLiked, likeCount, toggleLike };
 }
 
-export default useLike
+export default useLike;

@@ -14,19 +14,31 @@ import {
     ShareIcon,
 } from '~/components/Icons';
 import { useState } from "react";
+import { useAuth } from '~/contexts/AuthContext';
+import AuthModal from '~/components/AuthModal';
 
 const cx = classNames.bind(styles)
 function ActionBar({ data, direction='vertical', followAction=false }) {
-
+    const { isAuthenticated } = useAuth();
     const [isAnimating, setAnimating] = useState(false)
+    const [showAuthModal, setShowAuthModal] = useState(false);
 
     const handleLikeClick = () => {
+        if(!isAuthenticated) {
+            setShowAuthModal(true);
+            return;
+        }
+
         if(!isAnimating) {
             setAnimating(true);
             toggleLike();
 
             setTimeout(() => {setAnimating(false);}, 600)
         }
+    }
+
+    const handleCloseModal = () => {
+        setShowAuthModal(false);
     }
 
     const { isLiked, likeCount, toggleLike } = useLike(
@@ -95,6 +107,9 @@ function ActionBar({ data, direction='vertical', followAction=false }) {
                     </span>
                 </button>
             </section>
+            {showAuthModal && (
+                <AuthModal isOpen={showAuthModal} onClose={handleCloseModal} />
+            )}
         </div>
     );
 }
