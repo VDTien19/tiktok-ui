@@ -18,7 +18,7 @@ import { useAuth } from '~/contexts/AuthContext';
 import AuthModal from '~/components/AuthModal';
 
 const cx = classNames.bind(styles)
-function ActionBar({ data, direction='vertical', followAction=false }) {
+function ActionBar({ data, direction='vertical', followAction=false, shareAction=false, link=false }) {
     const { isAuthenticated } = useAuth();
     const [isAnimating, setAnimating] = useState(false)
     const [showAuthModal, setShowAuthModal] = useState(false);
@@ -53,7 +53,7 @@ function ActionBar({ data, direction='vertical', followAction=false }) {
     })
     
     return (  
-        <div>
+        <>
             <section className={actionBarDrirection}>
                 {followAction && (
                     <div className={cx('follow-action')}>
@@ -80,17 +80,31 @@ function ActionBar({ data, direction='vertical', followAction=false }) {
                     <span className={cx('like-count')}>{likeCount}</span>
                 </button>
                 <button className={cx('comment-action')}>
-                    <Link to={`/@${data.user.nickname}/video/${data.id}`}>
-                        <div className={cx('comment-icon')}>
-                            <Image
-                                src={images.commentIcon}
-                                className={cx('comment-img')}
-                            />
-                        </div>
-                        <span className={cx('comment-count')}>
-                            {data.comments_count}
-                        </span>
-                    </Link>
+                    {link ? (
+                        <Link to={`/@${data.user.nickname}/video/${data.id}`} className={cx('comment-link')}>
+                            <div className={cx('comment-icon')}>
+                                <Image
+                                    src={images.commentIcon}
+                                    className={cx('comment-img')}
+                                />
+                            </div>
+                            <span className={cx('comment-count')}>
+                                {data.comments_count}
+                            </span>
+                        </Link>
+                    ) : (
+                        <>
+                            <div className={cx('comment-icon')}>
+                                <Image
+                                    src={images.commentIcon}
+                                    className={cx('comment-img')}
+                                />
+                            </div>
+                            <span className={cx('comment-count')}>
+                                {data.comments_count}
+                            </span>
+                        </>
+                    )}
                 </button>
                 <button className={cx('favorite-action')}>
                     <div className={cx('favorite-icon')}>
@@ -98,19 +112,21 @@ function ActionBar({ data, direction='vertical', followAction=false }) {
                     </div>
                     <span className={cx('favorite-count')}>0</span>
                 </button>
-                <button className={cx('share-action')}>
-                    <div className={cx('share-icon')}>
-                        <ShareIcon />
-                    </div>
-                    <span className={cx('share-count')}>
-                        {data.shares_count}
-                    </span>
-                </button>
+                {shareAction && (
+                    <button className={cx('share-action')}>
+                        <div className={cx('share-icon')}>
+                            <ShareIcon />
+                        </div>
+                        <span className={cx('share-count')}>
+                            {data.shares_count}
+                        </span>
+                    </button>
+                )}
             </section>
             {showAuthModal && (
                 <AuthModal isOpen={showAuthModal} onClose={handleCloseModal} />
             )}
-        </div>
+        </>
     );
 }
 
