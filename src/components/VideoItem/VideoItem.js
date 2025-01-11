@@ -231,7 +231,7 @@ function VideoItem({ data, index, onPlaying, playingIndex }) {
                 </section>
 
                 {/* Action bar */}
-                <ActionBar data={data} followAction={true} />
+                <ActionBar data={data} followAction={true} shareAction={true} link/>
                 
             </div>
         </article>
