@@ -1,0 +1,199 @@
+.wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 0px;
+    margin-bottom: 1.3rem;
+    position: relative;
+}
+
+.user-url {
+    display: flex;
+    align-items: center;
+    flex: 1;
+
+    &:hover .nickname {
+        text-decoration: underline;
+    }
+}
+
+.avatar {
+    width: 4rem;
+    height: 4rem;
+    margin-right: 1.2rem;
+
+    .avatar-url {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 12px;
+        display: block;
+        margin: 0;
+    }
+}
+
+.user-info {
+    width: 100%;
+}
+
+.nickname {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.other-info {
+    font-size: 1.5rem;
+    font-weight: 500;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    color: #161823;
+}
+
+.username {
+    display: inline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.seperate {
+    margin: 0 6px;
+    width: 3px;
+    height: 3px;
+    display: block;
+    color: #161823;
+    background-color: #161823;
+    border-radius: 50%;
+}
+
+.follow-btn {
+    margin-left: 1.6rem;
+}
+
+.content {
+
+}
+
+.video-desc {
+    display: flex;
+    align-items: end;
+    font-size: 16px;
+    line-height: 21px;
+    word-break: break-word;
+    color: #161823;
+    fill: rgb(22, 24, 35);
+    margin-bottom: 4px;
+
+    .collapsed {
+        display: inline-block;
+        white-space: nowrap;
+        font-weight: 400;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        flex: 1;
+        margin-right: 4px;
+    }
+
+    .expanded {
+        display: inline-block;
+        font-weight: 400;
+        flex: 1;
+        margin-right: 4px;
+    }
+
+    button {
+        display: inline-block;
+        font-size: 1.4rem;
+        font-weight: 600;
+        width: auto;
+        cursor: pointer;
+        margin-bottom: 2px;
+    }
+}
+
+.music-url {
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    -webkit-box-orient: vertical;
+    margin-top: 4px;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    .music-icon {
+        width: 1.6rem;
+        height: 1.6rem;
+        fill: #000;
+        margin-right: 4px;
+    }
+}
+
+// Action 
+.action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    .share-list {
+        display: flex;
+    
+        .share-item {
+            margin: 0 6px;
+            cursor: pointer;
+        }
+    
+        .reup-icon {
+            border-radius: 50%;
+        }
+    }
+}
+
+.footer {
+    color: rgba(22, 24, 35, 0.75);
+    font-family: "IBM Plex Sans", TikTokFont, Arial, Tahoma, PingFangSC, sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 13px;
+    box-sizing: border-box;
+    border: 1px solid rgba(22, 24, 35, 0.12);
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 600px;
+}
+
+.share-url {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    flex: 1 1 auto;
+    padding: 7px 0px 7px 12px;
+    background-color: rgba(22, 24, 35, 0.06);
+    font-weight: 500;
+}
+
+.btn-copy {
+    border: none;
+    background: none rgba(22, 24, 35, 0.06);
+    outline: none;
+    color: rgb(22, 24, 35);
+    font-weight: 700;
+    flex: 0 0 auto;
+    cursor: pointer;
+    padding: 7px 18px;
+}
