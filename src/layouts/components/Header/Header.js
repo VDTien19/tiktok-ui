@@ -230,11 +230,13 @@ function Header() {
                                     content="Upload video"
                                     placement="bottom"
                                 >
-                                    <button className={cx('action-btn')}>
-                                        <UploadIcon
-                                            className={cx('upload-icon')}
-                                        />
-                                    </button>
+                                    <Link to={config.routes.upload} >
+                                        <button className={cx('action-btn')}>
+                                            <UploadIcon
+                                                className={cx('upload-icon')}
+                                            />
+                                        </button>
+                                    </Link >
                                 </Tippy>
                                 <Tippy content="Mailbox" placement="bottom">
                                     <button className={cx('action-btn')}>
