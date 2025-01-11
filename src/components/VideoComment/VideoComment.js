@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 
 const cx = classNames.bind(styles);
-function VideoComment({ videoData, index, playingIndex, onPlaying }) {
+function VideoComment({ videoData, index, playingIndex, onPlaying, children }) {
     const { volume, isMute, handleChangeVolume, toggleMute } = useVideo();
     const { videoRef } = useVideoIntersection(index, playingIndex, onPlaying);
 
@@ -130,6 +130,7 @@ function VideoComment({ videoData, index, playingIndex, onPlaying }) {
     
     return (
         <div className={cx('wrapper')}>
+            {children}
             <div
                 className={cx('video-overlay')}
                 style={{ backgroundImage: `url(${images.video1})` }}
