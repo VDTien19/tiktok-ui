@@ -63,7 +63,8 @@ function Sidebar() {
                 page: numPageSuggested,
                 perPage: PER_PAGE,
             });
-            setSuggestedUsers((prevUser) => [...prevUser, ...data]);
+            const filteredUsers = data.filter(user => user.is_followed === false)
+            setSuggestedUsers((prevUser) => [...prevUser, ...filteredUsers]);
         };
         fetchApi();
     }, [numPageSuggested]);
