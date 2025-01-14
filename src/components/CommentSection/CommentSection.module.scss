@@ -1,0 +1,32 @@
+.wrapper {
+    width: 100%;
+    margin: 4px 0;
+}
+
+.header {
+    border-top: 1px solid #ccc;
+    height: 4rem;
+    line-height: 4rem;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    background-color: var(--white);
+}
+
+.content {
+    overflow-y: hidden;
+}
+
+.comment-form {
+    height: 84px;
+    width: 600px;
+    flex: 1 1 600px;
+    background: #fff;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 0 3.2rem;
+    border-top: 1px solid #ccc;
+}
