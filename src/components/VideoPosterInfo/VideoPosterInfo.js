@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types';
+import { useRef, useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
+// import { toast } from 'react-toastify';
+import { Toaster, toast } from 'react-hot-toast';
 
 import styles from './VideoPosterInfo.module.scss';
 import Image from '~/components/Images';
@@ -24,7 +27,6 @@ import {
     PinterestIcon,
     WhatsAppIcon,
 } from '~/components/Icons';
-import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -125,6 +127,35 @@ const data = {
 };
 
 function VideoPosterInfo() {
+    const urlVideoRef = useRef(null);
+    const handleClickCopy = async () => {
+        if (urlVideoRef.current) {
+            try {
+                await navigator.clipboard.writeText(urlVideoRef.current.innerText);
+                toast('Đã sao chép liên kết', {
+                    position: "top-center",
+                    duration: 3000,
+                    style: {
+                        backgroundColor: "rgba(25, 25, 25, 0.8)",
+                        color: "#fff",
+                        fontWeight: "bold",
+                        width: "100%",
+                    },
+                    iconTheme: {
+                        display: "none",
+                    }
+                })
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+
+    useEffect(() => {
+        console.log("urlVideoRef: " + urlVideoRef.current.innerText);
+        
+    });
+
     const [isExpanded, setIsExpanded] = useState(false);
 
     const handleExpandDesc = () => {
@@ -167,6 +198,8 @@ function VideoPosterInfo() {
                         đòi cắt và ép side form hàn hết 260🌿,về mẹ hỏi tl làm
                         sao đó bà mẹ ra gank cả tiệm,haiz!!!#juicebarbershop
                         #juiceacademy #xuhuong
+                        Vừa nhặt được câu chuyện làm tóc đầu năm,ông em kia ra đòi cắt và ép side form hàn hết 260🌿,về mẹ hỏi tl làm sao đó bà mẹ ra gank cả tiệm,haiz!!!#juicebarbershop #juiceacademy #xuhuong
+                        Vừa nhặt được câu chuyện làm tóc đầu năm,ông em kia ra đòi cắt và ép side form hàn hết 260🌿,về mẹ hỏi tl làm sao đó bà mẹ ra gank cả tiệm,haiz!!!#juicebarbershop #juiceacademy #xuhuong
                     </span>
                     <button onClick={handleExpandDesc}>
                         {isExpanded ? 'ẩn bớt' : 'thêm'}
@@ -226,10 +259,11 @@ function VideoPosterInfo() {
             </div>
 
             <div className={cx('footer')}>
-                <p className={cx('share-url')}>
+                <p className={cx('share-url')} ref={urlVideoRef}>
                     https://www.tiktok.com/@juice_academy/video/7457080981988576520?is_from_webapp=1&sender_device=pc&web_id=7421012845237880328
                 </p>
-                <button className={cx('btn-copy')}>Sao chép liên kết</button>
+                <button onClick={handleClickCopy} className={cx('btn-copy')}>Sao chép liên kết</button>
+                <Toaster />
             </div>
         </div>
     );
