@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import * as likeServices from '~/services/likeServices';
 
 const useLike = (initialIsLiked, initialLikeCount, videoId) => {
     const [isLiked, setIsLiked] = useState(initialIsLiked);
     const [likeCount, setLikeCount] = useState(initialLikeCount);
+
+    useEffect(() => {
+        setIsLiked(initialIsLiked);
+        setLikeCount(initialLikeCount);
+    }, [initialIsLiked, initialLikeCount]); 
 
     const toggleLike = async () => {
         try {
