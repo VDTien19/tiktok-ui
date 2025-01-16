@@ -42,9 +42,9 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
     }
 
     const { isLiked, likeCount, toggleLike } = useLike(
-        data.is_liked,
-        data.likes_count,
-        data.id,
+        data?.is_liked,
+        data?.likes_count,
+        data?.id,
     );
 
     const actionBarDrirection = cx('action-bar', {
@@ -57,10 +57,10 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
             <section className={actionBarDrirection}>
                 {followAction && (
                     <div className={cx('follow-action')}>
-                        <Link to={`/@${data.user.nickname}`}>
+                        <Link to={`/@${data?.user.nickname}`}>
                             <Image
-                                src={data.user.avatar}
-                                alt={data.user.nickname}
+                                src={data?.user.avatar}
+                                alt={data?.user.nickname}
                                 className={cx('avatar-img')}
                             />
                         </Link>
@@ -81,7 +81,7 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
                 </button>
                 <button className={cx('comment-action')}>
                     {link ? (
-                        <Link to={`/@${data.user.nickname}/video/${data.id}`} className={cx('comment-link')}>
+                        <Link to={`/@${data?.user.nickname}/video/${data?.id}`} className={cx('comment-link')}>
                             <div className={cx('comment-icon')}>
                                 <Image
                                     src={images.commentIcon}
@@ -89,7 +89,7 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
                                 />
                             </div>
                             <span className={cx('comment-count')}>
-                                {data.comments_count}
+                                {data?.comments_count}
                             </span>
                         </Link>
                     ) : (
@@ -101,7 +101,7 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
                                 />
                             </div>
                             <span className={cx('comment-count')}>
-                                {data.comments_count}
+                                {data?.comments_count}
                             </span>
                         </>
                     )}
@@ -118,7 +118,7 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
                             <ShareIcon />
                         </div>
                         <span className={cx('share-count')}>
-                            {data.shares_count}
+                            {data?.shares_count}
                         </span>
                     </button>
                 )}
