@@ -42,7 +42,7 @@ function VideoComment({ videoData, index, playingIndex, onPlaying, children }) {
                 video.removeEventListener('play', () => setShowIconPause(false));
             }
         };
-    }, []);
+    }, [videoRef]);
     
     const [progress, setProgress] = useState(0);
     const [totalMinutes, setTotalMinutes] = useState(0);
@@ -133,14 +133,14 @@ function VideoComment({ videoData, index, playingIndex, onPlaying, children }) {
             {children}
             <div
                 className={cx('video-overlay')}
-                style={{ backgroundImage: `url(${images.video1})` }}
+                style={{ backgroundImage: `url(${videoData?.thumb_url})` }}
             ></div>
             <div className={cx('video-container')}>
                 <video
                     onClick={handleClickVideo}
                     ref={videoRef}
                     className={cx('video-url')}
-                    src={videos.video_1}
+                    src={videoData?.file_url}
                     loop
                     autoPlay
                 ></video>

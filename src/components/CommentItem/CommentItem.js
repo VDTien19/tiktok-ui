@@ -1,14 +1,29 @@
 import { PropTypes } from 'prop-types';
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 
-import { HeartIconActive, HeartSolidIcon } from '~/components/Icons';
+import { HeartSolidIconActive, HeartSolidIcon } from '~/components/Icons';
+import { likeComment, unlikeComment } from '~/services/likeServices';
 import Image from '~/components/Images';
 import styles from './CommentItem.module.scss';
 
 const cx = classNames.bind(styles)
 function CommentItem({ comment }) {
+    const [isLiked, setIsLiked] = useState(comment.is_liked);
+    const [likeCount, setLikeCount] = useState(comment.likes_count);
 
-    const time = comment.updated_at.split(' ')
+    const hanldeLikeVideo = () => {
+        setIsLiked(!isLiked);
+        if (isLiked) {
+            setLikeCount(prev => prev - 1);
+            unlikeComment(comment.id)
+        } else {
+            setLikeCount(prev => prev + 1);
+            likeComment(comment.id)
+        }
+    }
+
+    const time = comment.updated_at.split(' ');
 
     return (  
         <div className={cx('wrapper')}>
@@ -23,10 +38,14 @@ function CommentItem({ comment }) {
                 </div>
             </div>
             <div className={cx('comment-like')}>
-                <div className={cx('like-icon')}>
-                    <HeartSolidIcon />
+                <div className={cx('like-icon')} onClick={hanldeLikeVideo}>
+                    {isLiked ? (
+                        <HeartSolidIconActive />
+                    ) : (
+                        <HeartSolidIcon />
+                    )}
                 </div>
-                <div className={cx('like-count')}>{comment.likes_count}</div>
+                <div className={cx('like-count')}>{likeCount}</div>
             </div>
         </div>
     );

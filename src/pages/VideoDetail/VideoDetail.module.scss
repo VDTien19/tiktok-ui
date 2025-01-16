@@ -68,4 +68,22 @@
 
 .comment-section {
     flex: 1;
+    position: relative;
+}
+
+.loading {
+    animation: spinner .8s linear infinite;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+@keyframes spinner {
+    from {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
 }

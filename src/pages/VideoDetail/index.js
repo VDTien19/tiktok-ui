@@ -1,19 +1,47 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './VideoDetail.module.scss';
 import CommentSection from '~/components/CommentSection';
 import VideoPosterInfo from '~/components/VideoPosterInfo';
 import VideoComment from '~/components/VideoComment';
-// import CreatorVideo from '~/components/CreatorVideo';
 import { ClosedIcon } from '~/components/Icons';
+import { getVideo } from '~/services/videoServices';
+import { getComment } from '~/services/commentServices';
+import { useEffect, useState } from 'react';
+// import CreatorVideo from '~/components/CreatorVideo';
 
 const cx = classNames.bind(styles)
 
 function VideoDetail() {
+    const [videoData, setVideoData] = useState(null);
+    const [commentData, setCommentData] = useState([]);
+    const [commentsReady, setCommentsReady] = useState(false);
+
     const navigate = useNavigate();
 
+    const { id } = useParams();
+
+    useEffect(() => {
+        const fetchDataVideo = async () => {
+            try {
+                const data = await getVideo(id);
+                const comment = await getComment(id);
+                const videoData = data.data;
+                const commentData = comment.data;
+                setVideoData(videoData)
+                setCommentData(commentData || []);
+                setCommentsReady(true);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        fetchDataVideo();
+    }, [id]);
+    
     const handleClose = () => {
         navigate('/');
     };
@@ -21,7 +49,7 @@ function VideoDetail() {
     return ( 
         <div className={cx('wrapper')}>
             <div className={cx('video-container')}>
-                <VideoComment>
+                <VideoComment videoData={videoData}>
                     <div className={cx('close')}>
                         <button className={cx('close-btn')} onClick={handleClose} >
                             <ClosedIcon className={cx('close-icon')} />
@@ -31,10 +59,17 @@ function VideoDetail() {
             </div>
             <div className={cx('section')}>
                 <div className={cx('info-section')}>
-                    <VideoPosterInfo />
+                    <VideoPosterInfo dataUser={videoData} />
                 </div>
                 <div className={cx('comment-section')}>
-                    <CommentSection />
+                    {commentsReady ? (
+                        <CommentSection dataComment={commentData} />
+                    ) : (
+                        <FontAwesomeIcon
+                            className={cx('loading')}
+                            icon={faSpinner}
+                        />
+                    )}
                 </div>
             </div>
         </div>

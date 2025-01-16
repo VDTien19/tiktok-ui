@@ -68,66 +68,67 @@ const MENU_ITEMS = [
     },
 ];
 
-const data = {
-    "id": 1,
-    "uuid": "0abea96d-f156-4bf3-b876-85fddeab8618",
-    "user_id": 24,
-    "type": "",
-    "thumb_url": "https://files.fullstack.edu.vn/f8-tiktok/videos/1-6302686680ba6.jpg",
-    "file_url": "https://files.fullstack.edu.vn/f8-tiktok/videos/1-630268663e570.mp4",
-    "description": "đừng ai xem đến cuối =)))) ig: blmhuong",
-    "music": "",
-    "is_liked": false,
-    "likes_count": 17,
-    "comments_count": 14,
-    "shares_count": 0,
-    "views_count": 0,
-    "viewable": "public",
-    "allows": [
-        "comment"
-    ],
-    "published_at": "2022-08-22 00:16:22",
-    "created_at": "2022-08-22 00:16:22",
-    "updated_at": "2022-08-22 00:16:24",
-    "user": {
-        "id": 24,
-        "first_name": "Thanh",
-        "last_name": "Vương",
-        "nickname": "vuongf88",
-        "avatar": "https://files.fullstack.edu.vn/f8-tiktok/users/24/63086f1576895.png",
-        "bio": "✨ 1998 ✨\nVietnam 🇻🇳\nĐỪNG LẤY VIDEO CỦA TÔI ĐI SO SÁNH NỮA. XIN HÃY TÔN TRỌNG !",
-        "tick": true,
-        "is_followed": false,
-        "followings_count": 4,
-        "followers_count": 25,
-        "likes_count": 21,
-        "website_url": "https://fullstack.edu.vn/",
-        "facebook_url": "",
-        "youtube_url": "",
-        "twitter_url": "",
-        "instagram_url": ""
-    },
-    "meta": {
-        "file_size": 1452675,
-        "file_format": "mp4",
-        "mime_type": "video/mp4",
-        "playtime_string": "0:09",
-        "playtime_seconds": 8.892,
-        "bitrate": 1297088.6189833558,
-        "video": {
-            "dataformat": "quicktime",
-            "rotate": 0,
-            "resolution_x": 576,
-            "resolution_y": 1024,
-            "fourcc": "avc1",
-            "fourcc_lookup": "H.264/MPEG-4 AVC",
-            "frame_rate": 30
-        }
-    }
-};
+// const data = {
+//     "id": 1,
+//     "uuid": "0abea96d-f156-4bf3-b876-85fddeab8618",
+//     "user_id": 24,
+//     "type": "",
+//     "thumb_url": "https://files.fullstack.edu.vn/f8-tiktok/videos/1-6302686680ba6.jpg",
+//     "file_url": "https://files.fullstack.edu.vn/f8-tiktok/videos/1-630268663e570.mp4",
+//     "description": "đừng ai xem đến cuối =)))) ig: blmhuong",
+//     "music": "",
+//     "is_liked": false,
+//     "likes_count": 17,
+//     "comments_count": 14,
+//     "shares_count": 0,
+//     "views_count": 0,
+//     "viewable": "public",
+//     "allows": [
+//         "comment"
+//     ],
+//     "published_at": "2022-08-22 00:16:22",
+//     "created_at": "2022-08-22 00:16:22",
+//     "updated_at": "2022-08-22 00:16:24",
+//     "user": {
+//         "id": 24,
+//         "first_name": "Thanh",
+//         "last_name": "Vương",
+//         "nickname": "vuongf88",
+//         "avatar": "https://files.fullstack.edu.vn/f8-tiktok/users/24/63086f1576895.png",
+//         "bio": "✨ 1998 ✨\nVietnam 🇻🇳\nĐỪNG LẤY VIDEO CỦA TÔI ĐI SO SÁNH NỮA. XIN HÃY TÔN TRỌNG !",
+//         "tick": true,
+//         "is_followed": false,
+//         "followings_count": 4,
+//         "followers_count": 25,
+//         "likes_count": 21,
+//         "website_url": "https://fullstack.edu.vn/",
+//         "facebook_url": "",
+//         "youtube_url": "",
+//         "twitter_url": "",
+//         "instagram_url": ""
+//     },
+//     "meta": {
+//         "file_size": 1452675,
+//         "file_format": "mp4",
+//         "mime_type": "video/mp4",
+//         "playtime_string": "0:09",
+//         "playtime_seconds": 8.892,
+//         "bitrate": 1297088.6189833558,
+//         "video": {
+//             "dataformat": "quicktime",
+//             "rotate": 0,
+//             "resolution_x": 576,
+//             "resolution_y": 1024,
+//             "fourcc": "avc1",
+//             "fourcc_lookup": "H.264/MPEG-4 AVC",
+//             "frame_rate": 30
+//         }
+//     }
+// };
 
-function VideoPosterInfo() {
+function VideoPosterInfo({ dataUser }) {
     const urlVideoRef = useRef(null);
+
     const handleClickCopy = async () => {
         if (urlVideoRef.current) {
             try {
@@ -151,10 +152,9 @@ function VideoPosterInfo() {
         }
     }
 
-    useEffect(() => {
-        console.log("urlVideoRef: " + urlVideoRef.current.innerText);
-        
-    });
+    // useEffect(() => {
+    //     console.log("urlVideoRef: " + urlVideoRef.current.innerText);
+    // });
 
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -165,20 +165,22 @@ function VideoPosterInfo() {
     return (
         <div className={cx('wrapper')}>
             <header className={cx('header')}>
-                <Link to="/" className={cx('user-url')}>
+                <Link to={`/@${dataUser?.user.nickname}`} className={cx('user-url')}>
                     <div className={cx('avatar')}>
                         <Image
                             className={cx('avatar-url')}
-                            alt="tienne"
-                            src="https://thuthuatnhanh.com/wp-content/uploads/2023/06/hinh-anh-bau-troi-xanh-binh-yen.jpg"
+                            alt={dataUser?.user.nickname}
+                            src={dataUser?.user.avatar}
                         />
                     </div>
                     <div className={cx('user-info')}>
-                        <span className={cx('nickname')}>tienne</span>
+                        <span className={cx('nickname')}>{dataUser?.user.nickname}</span>
                         <div className={cx('other-info')}>
-                            <span className={cx('username')}>Vũ Đức Tiến</span>
-                            <span className={cx('seperate')}></span>
-                            <span>01-09-2003</span>
+                            <span className={cx('username')}>{`${dataUser?.user.first_name} ${dataUser?.user.last_name}`}</span>
+                            {(dataUser?.user.first_name || dataUser?.user.last_name) && (
+                                <span className={cx('seperate')}></span>
+                            )}
+                            <span>{dataUser?.updated_at.split(' ')[0]}</span>
                         </div>
                     </div>
                 </Link>
@@ -194,26 +196,21 @@ function VideoPosterInfo() {
                             collapsed: !isExpanded,
                         })}
                     >
-                        Vừa nhặt được câu chuyện làm tóc đầu năm,ông em kia ra
-                        đòi cắt và ép side form hàn hết 260🌿,về mẹ hỏi tl làm
-                        sao đó bà mẹ ra gank cả tiệm,haiz!!!#juicebarbershop
-                        #juiceacademy #xuhuong
-                        Vừa nhặt được câu chuyện làm tóc đầu năm,ông em kia ra đòi cắt và ép side form hàn hết 260🌿,về mẹ hỏi tl làm sao đó bà mẹ ra gank cả tiệm,haiz!!!#juicebarbershop #juiceacademy #xuhuong
-                        Vừa nhặt được câu chuyện làm tóc đầu năm,ông em kia ra đòi cắt và ép side form hàn hết 260🌿,về mẹ hỏi tl làm sao đó bà mẹ ra gank cả tiệm,haiz!!!#juicebarbershop #juiceacademy #xuhuong
+                        {dataUser?.description}
                     </span>
                     <button onClick={handleExpandDesc}>
                         {isExpanded ? 'ẩn bớt' : 'thêm'}
                     </button>
                 </h1>
                 <Link to="/" className={cx('music-url')}>
-                    <MusicNoteIcon className={cx('music-icon')} /> nhạc nền
+                    <MusicNoteIcon className={cx('music-icon')} /> nhạc nền {dataUser?.music}
                 </Link>
             </div>
 
             <div className={cx('action')}>
                 {/* Action bar */}
                 <div className={cx('action-bar')}>
-                    <ActionBar data={data} direction='horizontal' />
+                    <ActionBar data={dataUser} direction='horizontal' />
                 </div>
     
                 {/* Share */}
@@ -260,7 +257,7 @@ function VideoPosterInfo() {
 
             <div className={cx('footer')}>
                 <p className={cx('share-url')} ref={urlVideoRef}>
-                    https://www.tiktok.com/@juice_academy/video/7457080981988576520?is_from_webapp=1&sender_device=pc&web_id=7421012845237880328
+                   {`https://www.mytiktok.com/video/${dataUser?.id}`}
                 </p>
                 <button onClick={handleClickCopy} className={cx('btn-copy')}>Sao chép liên kết</button>
                 <Toaster />
