@@ -17,9 +17,6 @@ function VideoList() {
     const [page, setPage] = useState(initPage);
     const [playingIndex, setPlayingIndex] = useState(null);
 
-    // console.log("playingIndex: ", playingIndex)
-    console.log("page: ", page);
-
     const fetchVideos = async () => {
         try {
             const data = await getListVideo('for-you', page);
