@@ -42,6 +42,13 @@
 .comment-username {
     font-weight: 700;
     font-size: 14px;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.avatar:hover ~ .comment-username {
+    text-decoration: underline;
 }
 
 .comment-content {
