@@ -9,15 +9,13 @@ import styles from './CommentSection.module.scss'
 
 const cx = classNames.bind(styles)
 
-function CommentSection({ dataComment }) {
-    console.log("Comment: " + dataComment);
-
+function CommentSection({ dataComment, idVideo, refetchComments }) {
     if (!Array.isArray(dataComment) || dataComment.length === 0) {
         return (
             <div>
                 <p>Hãy là người đầu tiên bình luận video này.</p>
                 <div className={cx('comment-form')}>
-                    <CommentForm />
+                    <CommentForm refetchComments={refetchComments} />
                 </div>
             </div>
         )
@@ -31,7 +29,7 @@ function CommentSection({ dataComment }) {
                 <CommentList comments={dataComment} />
             </div>
             <div className={cx('comment-form')}>
-                <CommentForm />
+                <CommentForm idVideo={idVideo} refetchComments={refetchComments} />
             </div>
         </div>
     );

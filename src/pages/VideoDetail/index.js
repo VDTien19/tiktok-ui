@@ -41,6 +41,15 @@ function VideoDetail() {
         }
         fetchDataVideo();
     }, [id]);
+
+    const refetchComments = async () => {
+        try {
+            const comment = await getComment(id);
+            setCommentData(comment.data || []);
+        } catch (e) {
+            console.log(e);
+        }
+    };
     
     const handleClose = () => {
         navigate('/');
@@ -63,7 +72,7 @@ function VideoDetail() {
                 </div>
                 <div className={cx('comment-section')}>
                     {commentsReady ? (
-                        <CommentSection dataComment={commentData} />
+                        <CommentSection dataComment={commentData} idVideo={id} refetchComments={refetchComments} />
                     ) : (
                         <FontAwesomeIcon
                             className={cx('loading')}
