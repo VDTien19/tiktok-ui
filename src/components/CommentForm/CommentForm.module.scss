@@ -82,6 +82,10 @@
             line-height: 39px;
             text-align: right;
             margin-right: 4px;
+
+            &.btn-active {
+                color: var(--primary);
+            }
         }
     }
 }
