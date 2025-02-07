@@ -19,7 +19,7 @@ import * as followServices from '~/services/followServices';
 
 const cx = classNames.bind(styles);
 
-const INIT_PAGE = 1;
+const INIT_PAGE = Math.floor(Math.random() * 10);
 const PER_PAGE = 5;
 
 const MENU_ITEMS = [
@@ -55,7 +55,7 @@ function Sidebar() {
     const [suggestedUsers, setSuggestedUsers] = useState([]);
     const [followingUsers, setFollowingUsers] = useState([]);
     const [numPageSuggested, setNumPageSuggested] = useState(INIT_PAGE);
-    const [numPageFollowing, setNumPageFollowing] = useState(INIT_PAGE);
+    const [numPageFollowing, setNumPageFollowing] = useState(1);
 
     useEffect(() => {
         const fetchApi = async () => {
