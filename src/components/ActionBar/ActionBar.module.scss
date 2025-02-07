@@ -88,7 +88,12 @@
     height: 24px;
     background-color: var(--primary);
     border-radius: 50%;
-    border: 1px solid var(--primary);
+    // border: 1px solid var(--primary);
+
+    &.white-bg {
+        background-color: var(--white);
+        border: 1px solid rgba(22, 24, 35, 0.12);
+    }
 
     .add-icon {
         position: absolute;
@@ -97,6 +102,16 @@
         transform: translate(-50%, -50%);
         width: 3.8rem;
         height: 3.8rem;
+    }
+
+    .tick-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 1.4rem;
+        height: 1.4rem;
+        color: var(--primary);
     }
 }
 

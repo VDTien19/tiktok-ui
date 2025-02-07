@@ -2,12 +2,13 @@ import classNames from "classnames/bind";
 import { Link } from 'react-router-dom';
 import { memo } from 'react';
 
-import { useLike } from '~/hooks';
+import { useLike, useFollow } from '~/hooks';
 import styles from './ActionBar.module.scss'
 import Image from '~/components/Images'
 import images from '~/assets/images';
 import {
     AddIcon,
+    TickIcon,
     HeartIcon,
     HeartIconActive,
     FavoriteIcon,
@@ -41,6 +42,21 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
         setShowAuthModal(false);
     }
 
+    const { isFollowed, toggleFollow } = useFollow(
+        data?.user.is_followed,
+        null,
+        data?.user.id
+    );
+
+    const handleFollow = () => {
+        if(isAuthenticated) {
+            toggleFollow();
+        } else {
+            setShowAuthModal(true);
+            return;
+        }
+    }
+
     const { isLiked, likeCount, toggleLike } = useLike(
         data?.is_liked,
         data?.likes_count,
@@ -64,8 +80,12 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
                                 className={cx('avatar-img')}
                             />
                         </Link>
-                        <button className={cx('follow-btn')}>
-                            <AddIcon className={cx('add-icon')} />
+                        <button onClick={handleFollow} className={cx('follow-btn', {'white-bg': isFollowed})}>
+                            {isFollowed ? (
+                                <TickIcon className={cx('tick-icon')} />
+                            ) : (
+                                <AddIcon className={cx('add-icon')} />
+                            )}
                         </button>
                     </div>
                 )}
