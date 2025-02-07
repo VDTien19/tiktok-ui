@@ -15,7 +15,7 @@ function SuggestedAccounts({ label, data = [], onSeeMore }) {
                 <AccountItem key={account.nickname} data={account} />
             ))}
 
-            <p className={cx('more-btn')} onClick={onSeeMore}>See more</p>
+            {data.length >= 5 && (<p className={cx('more-btn')} onClick={onSeeMore}>See more</p>)}
         </div>
     );
 }
