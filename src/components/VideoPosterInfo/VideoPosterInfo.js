@@ -4,9 +4,9 @@ import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-// import { toast } from 'react-toastify';
 import { Toaster, toast } from 'react-hot-toast';
 
+import { useFollow } from '~/hooks';
 import styles from './VideoPosterInfo.module.scss';
 import Image from '~/components/Images';
 import Button from '~/components/Button';
@@ -71,6 +71,16 @@ const MENU_ITEMS = [
 
 function VideoPosterInfo({ dataUser }) {
     const urlVideoRef = useRef(null);
+
+    const { isFollowed, toggleFollow } = useFollow(
+        dataUser?.user.is_followed,
+        null,
+        dataUser?.user.id,
+    );
+
+    const handleFollow = () => {
+        toggleFollow();
+    }
 
     const handleClickCopy = async () => {
         if (urlVideoRef.current) {
@@ -146,8 +156,8 @@ function VideoPosterInfo({ dataUser }) {
                         Following
                     </Button>
                 )} */}
-                <Button primary={!dataUser?.user.is_followed} outline={dataUser?.user.is_followed} className={cx('follow-btn')}>
-                    {dataUser?.user.is_followed ? 'Following' : 'Follow'}
+                <Button onClick={handleFollow} primary={!isFollowed} outline={isFollowed} className={cx('follow-btn')}>
+                    {isFollowed ? 'Following' : 'Follow'}
                 </Button>
             </header>
             <div className={cx('content')}>
@@ -160,9 +170,11 @@ function VideoPosterInfo({ dataUser }) {
                     >
                         {dataUser?.description}
                     </span>
-                    <button onClick={handleExpandDesc}>
-                        {isExpanded ? 'ẩn bớt' : 'thêm'}
-                    </button>
+                    {dataUser?.description.length > 100 && (
+                        <button onClick={handleExpandDesc}>
+                            {isExpanded ? 'ẩn bớt' : 'thêm'}
+                        </button>
+                    )}
                 </h1>
                 <Link to="/" className={cx('music-url')}>
                     <MusicNoteIcon className={cx('music-icon')} /> nhạc nền{' '}
