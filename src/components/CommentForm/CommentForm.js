@@ -18,7 +18,7 @@ function CommentForm({ idVideo, refetchComments }) {
         
         if(!commentValue.startsWith(' ')) {
             setCommentValue(commentValue);
-            setActiveButton(true);
+            setActiveButton(commentValue.trim().length > 0);
         }
     }
     
