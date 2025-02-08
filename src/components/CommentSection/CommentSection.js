@@ -15,7 +15,7 @@ function CommentSection({ dataComment, idVideo, refetchComments }) {
             <div>
                 <p>Hãy là người đầu tiên bình luận video này.</p>
                 <div className={cx('comment-form')}>
-                    <CommentForm refetchComments={refetchComments} />
+                    <CommentForm idVideo={idVideo} refetchComments={refetchComments} />
                 </div>
             </div>
         )
