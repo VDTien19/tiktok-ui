@@ -41,13 +41,7 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
     const handleCloseModal = () => {
         setShowAuthModal(false);
     }
-
-    const { isFollowed, toggleFollow } = useFollow(
-        data?.user.is_followed,
-        null,
-        data?.user.id
-    );
-
+    
     const handleFollow = () => {
         if(isAuthenticated) {
             toggleFollow();
@@ -56,6 +50,21 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
             return;
         }
     }
+
+    const handleComment = (e) => {
+        e.stopPropagation();
+
+        if(!isAuthenticated) {
+            setShowAuthModal(true);
+            return;
+        }
+    }
+
+    const { isFollowed, toggleFollow } = useFollow(
+        data?.user.is_followed,
+        null,
+        data?.user.id
+    );
 
     const { isLiked, likeCount, toggleLike } = useLike(
         data?.is_liked,
@@ -99,8 +108,8 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
                     </div>
                     <span className={cx('like-count')}>{likeCount}</span>
                 </button>
-                <button className={cx('comment-action')}>
-                    {link ? (
+                <button onClick={handleComment} className={cx('comment-action')}>
+                    {(link && isAuthenticated) ? (
                         <Link to={`/@${data?.user.nickname}/video/${data?.id}`} className={cx('comment-link')}>
                             <div className={cx('comment-icon')}>
                                 <Image
