@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './Modal.module.scss';
@@ -12,7 +13,7 @@ function Modal({ children, isOpen, onClose }) {
         return null;
     }
 
-    return (
+    return ReactDOM.createPortal(
         <div className={cx('modal')}>
             <div className={cx('modal-overlay')} onClick={onClose}>
                 <div
@@ -23,7 +24,8 @@ function Modal({ children, isOpen, onClose }) {
                     {children}
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 
