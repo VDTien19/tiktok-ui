@@ -1,5 +1,5 @@
-function Live() {
-    return (
+function Following() {
+    return (  
         <h1
             style={{
                 width: '100%',
@@ -16,4 +16,4 @@ function Live() {
     );
 }
 
-export default Live;
+export default Following;

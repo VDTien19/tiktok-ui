@@ -3,8 +3,6 @@ import classNames from 'classnames/bind';
 import { useVideoIntersection } from '~/hooks';
 import { useVideo } from '~/contexts/VideoContext';
 import styles from './VideoComment.module.scss';
-import videos from '~/assets/videos';
-import images from '~/assets/images';
 import {
     OnSoundIcon,
     MutedIcon,

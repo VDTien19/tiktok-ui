@@ -43,9 +43,9 @@ function CommentItem({ comment }) {
                             to={`/@${comment.user.nickname}`}
                         >{`${comment.user.first_name} ${comment.user.last_name}`}</Link>
                     </div>
-                    <div className={cx('comment-content')}>
+                    <p className={cx('comment-content')}>
                         {comment.comment}
-                    </div>
+                    </p>
                     <div className={cx('comment-time')}>{time[0]}</div>
                 </div>
             </div>

@@ -413,7 +413,11 @@ export const AddIcon = ({ width = '3.2rem', height = '3.2rem', className }) => (
     </svg>
 );
 
-export const TickIcon = ({ width = '3.2rem', height = '3.2rem', className }) => (
+export const TickIcon = ({
+    width = '3.2rem',
+    height = '3.2rem',
+    className,
+}) => (
     <svg
         fill="currentColor"
         viewBox="0 0 48 48"
@@ -636,26 +640,19 @@ export const PauseIcon = ({
     </svg>
 );
 
-export const ArrowIcon = ({
-    width = '3.2rem',
-    height = '3.2rem',
-    className,
-}) => (
+export const ArrowIcon = ({ width = '2.2rem', height = '2.2rem', className }) => (
     <svg
         width={width}
         height={height}
         className={className}
-        aria-hidden="true"
-        focusable="false"
-        dataprefix="fas"
-        dataicon="chevron-up"
-        role="img"
+        viewBox="0 0 48 48"
+        fill="#fff"
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 512 512"
     >
         <path
-            fill="currentColor"
-            d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M34.4142 22.5858L18.1213 6.29289C17.7308 5.90237 17.0976 5.90237 16.7071 6.29289L15.2929 7.70711C14.9024 8.09763 14.9024 8.7308 15.2929 9.12132L30.1716 24L15.2929 38.8787C14.9024 39.2692 14.9024 39.9024 15.2929 40.2929L16.7071 41.7071C17.0976 42.0976 17.7308 42.0976 18.1213 41.7071L34.4142 25.4142C35.1953 24.6332 35.1953 23.3668 34.4142 22.5858Z"
         ></path>
     </svg>
 );

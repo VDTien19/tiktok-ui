@@ -32,11 +32,11 @@
     }
 }
 
-
 .comment {
     display: flex;
     flex-direction: column;
     flex: 1;
+    max-width: 450px;
 }
 
 .comment-username {
@@ -53,6 +53,10 @@
 
 .comment-content {
     margin-right: 4px;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal; 
 }
 
 .comment-time {
