@@ -46,6 +46,42 @@
     width: 1.8rem;
 }
 
+// Row controls
+.row-control {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    margin-right: 1.6rem;
+    
+    button {
+        cursor: pointer;
+        background: rgba(172, 172, 172, 0.3);
+        width: 4rem;
+        height: 4rem;
+        margin: 8px 0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            background: rgba(59, 59, 59, 0.7);
+        }
+    }
+
+    .row-up-btn {
+        rotate: 270deg;
+    }
+
+    .row-down-btn {
+        rotate: 90deg;
+    }
+}
+
 .section {
     display: flex;
     flex-direction: column;
