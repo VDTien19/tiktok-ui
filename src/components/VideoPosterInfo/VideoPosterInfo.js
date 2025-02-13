@@ -220,7 +220,7 @@ function VideoPosterInfo({ dataUser }) {
 
             <div className={cx('footer')}>
                 <p className={cx('share-url')} ref={urlVideoRef}>
-                    {`https://www.mytiktok.com/video/${dataUser?.id}`}
+                    {`${window.location.origin}/@${dataUser?.user.nickname}/video/${dataUser?.id}`}
                 </p>
                 <button onClick={handleClickCopy} className={cx('btn-copy')}>
                     Sao chép liên kết
