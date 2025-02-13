@@ -35,20 +35,11 @@ function CommentForm({ idVideo, refetchComments }) {
                 setCommentValue('');
                 setActiveButton(false);
             }
-            console.log('Comment successfully');
             await refetchComments();
         } catch (e) {
             console.log(e);
         }
-        // console.log("Comment: " + commentValue);
     }
-
-    // const prevHandleSubmit = (e) => {
-    //     e.preventDefault();
-    //     if(inputRef.current.value !== '') {
-    //         handleSubmit(e)
-    //     }
-    // };  
 
     return (
         <div className={cx('wrapper')}>
