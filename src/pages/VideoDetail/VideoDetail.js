@@ -1,10 +1,8 @@
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState, useCallback } from 'react';
-import { throttle } from 'lodash';
+import { useEffect, useState } from 'react';
 
 import styles from './VideoDetail.module.scss';
 import CommentSection from '~/components/CommentSection';
@@ -13,43 +11,40 @@ import VideoComment from '~/components/VideoComment';
 import { ClosedIcon, ArrowIcon } from '~/components/Icons';
 import { getVideo, getListVideo } from '~/services/videoServices';
 import { getComment } from '~/services/commentServices';
-// import CreatorVideo from '~/components/CreatorVideo';
 
-const cx = classNames.bind(styles)
+const cx = classNames.bind(styles);
 const initPage = Math.floor(Math.random() * 10);
 
 function VideoDetail() {
     const [videoData, setVideoData] = useState(null);
     const [commentData, setCommentData] = useState([]);
     const [commentsReady, setCommentsReady] = useState(false);
-    const [videoHistory, setVideoHistory] = useState([]);
+    const [videoHistory, setVideoHistory] = useState([]); // Lưu video đã xem
     const [videos, setVideos] = useState([]);
     const [page, setPage] = useState(initPage);
 
     const navigate = useNavigate();
-
     const { id } = useParams();
 
     useEffect(() => {
         const fetchDataVideo = async (idVideo) => {
             try {
                 const data = await getVideo(idVideo);
-                const videoData = data.data;
-                setVideoData(videoData)
+                setVideoData(data.data);
             } catch (e) {
                 console.error("Error fetching video: " + e);
             }
-        }
+        };
+
         const fetchDataComment = async (idVideo) => {
             try {
                 const comment = await getComment(idVideo);
-                const commentData = comment.data;
-                setCommentData(commentData || []);
+                setCommentData(comment.data || []);
                 setCommentsReady(true);
             } catch (e) {
                 console.error("Error fetching comment: ", e);
             }
-        }
+        };
 
         fetchDataVideo(id);
         fetchDataComment(id);
@@ -64,127 +59,61 @@ function VideoDetail() {
         }
     };
 
-    // Xác định vị trí của video hiện tại trong danh sách
+    // Tìm vị trí của video hiện tại trong danh sách
     const currentIndex = videos.findIndex(video => video.id === Number(id));
 
-    // Nếu video hiện tại không có trong danh sách, thêm vào đầu danh sách
-    const fetchVideos = async () => {
-        try {
-            const data = await getListVideo('for-you', page);
-            const updatedVideos = [...data];
-
-            // Nếu video hiện tại không có trong danh sách, thêm vào
-            if (!updatedVideos.some(video => video.id === Number(id)) && videoData) {
-                updatedVideos.unshift(videoData);
-            }
-
-            setVideos(updatedVideos);
-        } catch (err) {
-            console.error('Lỗi khi lấy danh sách video: ', err);
-        }
-    }
-
+    // Fetch danh sách video (chỉ khi danh sách rỗng hoặc cần thêm video)
     useEffect(() => {
-        fetchVideos();
-    }, [page]);
+        const fetchVideos = async () => {
+            try {
+                const data = await getListVideo('for-you', page);
 
-    // Chuyển sang video tiếp theo
+                setVideos((prevVideos) => {
+                    const updatedVideos = [...prevVideos, ...data];
+
+                    // Đảm bảo video hiện tại có trong danh sách
+                    if (!updatedVideos.some(video => video.id === Number(id)) && videoData) {
+                        updatedVideos.unshift(videoData);
+                    }
+
+                    return updatedVideos;
+                });
+            } catch (err) {
+                console.error('Lỗi khi lấy danh sách video: ', err);
+            }
+        };
+
+        if (videos.length === 0 || currentIndex === videos.length - 1) {
+            fetchVideos();
+        }
+    }, [page, id]);
+
+    // chuyển sang video tiếp theo
     const handleNextVideo = () => {
-        if (currentIndex !== -1 && currentIndex < videos.length - 1) {
-            const nextVideo = videos[currentIndex + 1];
-            navigate(`/@${nextVideo.user.nickname}/video/${nextVideo.id}`);
-        } else {
-            setPage(prevPage => prevPage + 1); // Tải thêm video nếu hết danh sách
-        }
+        const nextVideo = videos[currentIndex + 1];
+        setVideoHistory((prevHistory) => [...prevHistory, id]); // Lưu video đã xem
+        navigate(`/@${nextVideo.user.nickname}/video/${nextVideo.id}`);
     };
 
-    // Quay lại video trước đó
+    // quay lại video trước
     const handlePrevVideo = () => {
-        if (currentIndex > 0) {
-            const prevVideo = videos[currentIndex - 1];
-            navigate(`/@${prevVideo.user.nickname}/video/${prevVideo.id}`);
+        if (videoHistory.length > 0) {
+            const prevId = videoHistory.pop(); // Lấy video cuối trong lịch sử
+            setVideoHistory([...videoHistory]); // Cập nhật lại lịch sử
+            navigate(`/@${videos.find(video => video.id === Number(prevId))?.user.nickname}/video/${prevId}`);
         }
     };
-
-    // const handlePrevVideo = async () => {
-    //     if(videoHistory.length > 0) {
-    //         const prevId = videoHistory.pop(); 
-    //         setVideoHistory([...videoHistory]);
-    //         try {
-    //             const res = await getVideo(prevId); // Lấy dữ liệu video trước 
-    //             if (res.data) {
-    //                 navigate(`/@${res.data.user.nickname}/video/${prevId}`);
-    //             }
-    //         } catch (e) {
-    //             console.error("Lỗi khi quay lại video:", prevId);
-    //         }
-    //     }
-    // }
-
-
-    // const handleScroll = useCallback(
-    //     throttle(() => {
-    //         if (window.scrollY + window.innerHeight >= document.body.offsetHeight - 100) {
-    //             setPage((prevPage) => prevPage + 1);
-    //         }
-    //     }, 300), // Throttle 300ms
-    //     [],
-    // );
-
-    // useEffect(() => {
-    //     window.addEventListener('scroll', handleScroll);
-    //     return () => {
-    //         window.removeEventListener('scroll', handleScroll);
-    //     };
-    // }, [page]);
-
-
-    // Handle next video
-    // const handleNextVideo = async () => {
-    //     let nextId = Number(id) - 1;
-    //     while (true) {
-    //         try {
-    //             const res = await getVideo(nextId);
-    //             const data = res.data;
-    //             if(data) {
-    //                 setVideoHistory([...videoHistory, id]); // Lưu id cũ
-    //                 navigate(`/@${data?.user.nickname}/video/${data?.id}`);
-    //                 return;
-    //             };
-    //         } catch (e) {
-    //             console.error("Video", nextId, "không hợp lê: ", e);
-    //             nextId--;
-    //             if(nextId > Number(id) + 100)    break; // Call api tối đa 10 lần
-    //         }
-    //     }
-    // }
- 
-    // // Handle back video
-    // const handlePrevVideo = async () => {
-    //     if(videoHistory.length > 0) {
-    //         const prevId = videoHistory.pop(); 
-    //         setVideoHistory([...videoHistory]);
-    //         try {
-    //             const res = await getVideo(prevId); // Lấy dữ liệu video trước 
-    //             if (res.data) {
-    //                 navigate(`/@${res.data.user.nickname}/video/${prevId}`);
-    //             }
-    //         } catch (e) {
-    //             console.error("Lỗi khi quay lại video:", prevId);
-    //         }
-    //     }
-    // }
 
     const handleClose = () => {
         navigate('/');
     };
 
-    return ( 
+    return (
         <div className={cx('wrapper')}>
             <div className={cx('video-container')}>
                 <VideoComment videoData={videoData}>
                     <div className={cx('close')}>
-                        <button className={cx('close-btn')} onClick={handleClose} >
+                        <button className={cx('close-btn')} onClick={handleClose}>
                             <ClosedIcon className={cx('close-icon')} />
                         </button>
                     </div>
@@ -208,10 +137,7 @@ function VideoDetail() {
                     {commentsReady ? (
                         <CommentSection dataComment={commentData} idVideo={id} refetchComments={refetchComments} />
                     ) : (
-                        <FontAwesomeIcon
-                            className={cx('loading')}
-                            icon={faSpinner}
-                        />
+                        <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />
                     )}
                 </div>
             </div>
