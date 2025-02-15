@@ -179,7 +179,7 @@ function Header() {
     // console.log('nickname: ', nickname);
 
     const handleViewProfile = () => {
-        console.log('Clicked !');
+        // console.log('Clicked !');
         if (location.pathname !== userData?.nickname) {
             navigate(`@${userData?.nickname}`);
         }
