@@ -59,10 +59,9 @@ function VideoDetail() {
         }
     };
 
-    // Tìm vị trí của video hiện tại trong danh sách
+    // Vị trí của video hiện tại trong danh sách
     const currentIndex = videos.findIndex(video => video.id === Number(id));
 
-    // Fetch danh sách video (chỉ khi danh sách rỗng hoặc cần thêm video)
     useEffect(() => {
         const fetchVideos = async () => {
             try {
@@ -86,23 +85,46 @@ function VideoDetail() {
         if (videos.length === 0 || currentIndex === videos.length - 1) {
             fetchVideos();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, id]);
 
+    
     // chuyển sang video tiếp theo
     const handleNextVideo = () => {
         const nextVideo = videos[currentIndex + 1];
         setVideoHistory((prevHistory) => [...prevHistory, id]); // Lưu video đã xem
         navigate(`/@${nextVideo.user.nickname}/video/${nextVideo.id}`);
+        // console.log({currentIndex, videos})
+        if (currentIndex === videos.length - 2) {
+            // console.log("Page add 1");
+            setPage(prev => prev + 1);
+        }
     };
 
     // quay lại video trước
-    const handlePrevVideo = () => {
-        if (videoHistory.length > 0) {
-            const prevId = videoHistory.pop(); // Lấy video cuối trong lịch sử
-            setVideoHistory([...videoHistory]); // Cập nhật lại lịch sử
-            navigate(`/@${videos.find(video => video.id === Number(prevId))?.user.nickname}/video/${prevId}`);
+    const handlePrevVideo = async () => {
+        if(videoHistory.length > 0) {
+            // console.log("videoHistory: ", videoHistory)
+            const prevId = videoHistory.pop(); 
+            setVideoHistory([...videoHistory]);
+            try {
+                const res = await getVideo(prevId); // Lấy dữ liệu video trước 
+                if (res.data) {
+                    navigate(`/@${res.data.user.nickname}/video/${prevId}`);
+                }
+            } catch (e) {
+                console.error("Lỗi khi quay lại video:", prevId);
+            }
         }
-    };
+    }
+    // const handlePrevVideo = () => {
+    //     if (videoHistory.length > 0) {
+    //         console.log("videoHistory: ", videoHistory)
+    //         const prevId = videoHistory.pop(); // Lấy video cuối trong lịch sử
+    //         setVideoHistory([...videoHistory]); // Cập nhật lại lịch sử
+    //         navigate(`/@${videos.user?.nickname}/video/${prevId}`);
+    //     }
+    // };
 
     const handleClose = () => {
         navigate('/');
