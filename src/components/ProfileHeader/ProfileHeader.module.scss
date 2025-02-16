@@ -1,0 +1,131 @@
+.wrapper {
+    --height-header: 21rem;
+
+    height: var(--height-header);
+    width: auto;
+    display: flex;
+}
+
+.avatar {
+    width: var(--height-header);
+    height: var(--height-header);
+    border-radius: 50%;
+    margin-right: 2.6rem;
+    aspect-ratio: 1 / 1;
+
+    .avatar-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+}
+
+.info {
+    .name {
+        display: flex;
+        justify-content: flex-start;
+        align-items: end;
+
+        .username {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-right: 1.4rem;
+        }
+
+        .full-name {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+    }
+
+    .action {
+        .action-list {
+            display: flex;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+    
+            .post-adv:hover,
+            .message-btn:hover, 
+            .follow-btn:hover {
+                background-color: rgba(0, 0, 0, 0.12);
+            }
+    
+            .setting-btn,
+            .share-btn,
+            .three-dot-btn {
+                cursor: pointer;
+                width: 4rem;
+                height: 4rem;
+                margin: 0 8px;
+                border-radius: 4px;
+    
+                &:hover {
+                    background-color: rgba(0, 0, 0, 0.12);
+                }
+            }
+            
+            .follow-btn {
+                span {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+    
+                    p {
+                        margin-left: 6px;
+                        font-size: 1.6rem;
+                    }
+                }
+            }
+        }
+    }
+    
+    .action-bar {
+        display: flex;
+        align-items: center;
+    
+        div {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-right: 2rem;
+    
+            p:first-child{
+                margin-right: 6px;
+                font-weight: 600;
+                font-size: 1.8rem;
+            }
+    
+            p:last-child {
+                font-size: 1.6rem;
+    
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    .bio {
+        max-width: 420px;
+        max-height: 70px;
+        overflow: hidden;
+
+        .bio-text {
+            font-size: 1.6rem;
+            line-height: 2rem;
+            width: 100%;
+            height: 100%;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            white-space: wrap;
+            -webkit-line-clamp: 3;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.info>div {
+    margin-bottom: 12px;
+}
