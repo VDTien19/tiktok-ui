@@ -54,12 +54,15 @@ function AuthProvider({ children }) {
                 fetchUserData(); // Gọi lại fetchUserData để lấy thông tin người dùng sau khi đăng nhập
                 setIsAuthenticated(true);
                 setError(null);
+                return true;
             } else {
                 setError('Login failed. Please check your credentials.');
+                return false;
             }
         } catch (err) {
             console.log('>>> Login error:', err);
             setError('An error occurred during login.');
+            return false;
         } finally {
             setLoading(false);
         }
