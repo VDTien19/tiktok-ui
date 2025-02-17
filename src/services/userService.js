@@ -13,3 +13,12 @@ export const getSuggested = async ({ page, perPage }) => {
         console.log(error);
     }
 };
+
+export const getAnUser = async(nickname) => {
+    try {
+        const res = await httpRequest.get(`users/${nickname}`);
+        return res.data;
+    } catch (error) {
+        console.log("Failed to get user" + error);
+    }
+}
