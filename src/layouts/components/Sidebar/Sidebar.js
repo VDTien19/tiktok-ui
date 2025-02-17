@@ -136,7 +136,7 @@ function Sidebar() {
                 data={suggestedUsers}
                 onSeeMore={handleSeeMoreSuggested}
             />
-            {isAuthenticated && (
+            {isAuthenticated && followingUsers.length > 0 && (
                 <SuggestedAccounts
                     label="Following Accounts"
                     data={followingUsers}
