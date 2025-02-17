@@ -13,7 +13,8 @@ import {
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
+import { Toaster, toast } from 'react-hot-toast';
 
 import styles from './Header.module.scss';
 import images from '~/assets/images';
@@ -156,15 +157,33 @@ function Header() {
         const confirmed = window.confirm('Are you sure you want to log out?');
         if (confirmed) {
             logout();
-            toast.success('Logged out successfully!', {
-                position: 'top-right',
-                autoClose: 3000,
+            toast('Đăng xuất thành công!', {
+                position: 'top-center',
+                duration: 3000,
+                style: {
+                    backgroundColor: 'rgba(25, 25, 25, 0.8)',
+                    color: '#fff',
+                    fontWeight: 'italic',
+                    width: '100%',
+                },
+                iconTheme: {
+                    display: 'none',
+                },
             });
             // console.log('>>> Logout success');
         } else {
-            toast.info('Logout canceled.', {
-                position: 'top-right',
-                autoClose: 3000,
+            toast('Hủy đăng xuất.', {
+                position: 'top-center',
+                duration: 3000,
+                style: {
+                    backgroundColor: 'rgba(25, 25, 25, 0.8)',
+                    color: '#fff',
+                    fontWeight: 'italic',
+                    width: '100%',
+                },
+                iconTheme: {
+                    display: 'none',
+                },
             });
             // console.log('>>> Logout canceled');
         }
@@ -181,7 +200,7 @@ function Header() {
     const handleViewProfile = () => {
         // console.log('Clicked !');
         if (location.pathname !== userData?.nickname) {
-            navigate(`@${userData?.nickname}`);
+            navigate(`/@${userData?.nickname}`);
         }
     };
 
@@ -284,6 +303,7 @@ function Header() {
                         )}
                     </div>
                 </div>
+                <Toaster />
             </header>
             {showAuthModal && (
                 <AuthModal isOpen={showAuthModal} onClose={handleCloseModal} />

@@ -1,4 +1,5 @@
 import classNames from 'classnames/bind';
+import { Toaster, toast } from 'react-hot-toast';
 
 import styles from './Login.module.scss';
 import { useState } from 'react';
@@ -16,14 +17,30 @@ function LoginForm({ onClose, switchToRegister }) {
         setUsername('');
         setPassword('');
         onClose();
+        toast('Đăng nhập thành công.', {
+            position: 'top-center',
+            duration: 3000,
+            style: {
+                backgroundColor: 'rgba(25, 25, 25, 0.8)',
+                color: '#fff',
+                fontWeight: 'italic',
+                width: '100%',
+            },
+            iconTheme: {
+                display: 'none',
+            },
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await login(username, password);
+            const isSuccess = await login(username, password);
 
-            handleLoginSuccess();
+            if (isSuccess) {
+                handleLoginSuccess();
+            }
+            
         } catch (err) {
             setError('Failed to login. Please check your credentials.');
             console.error('Login error:', err);
@@ -96,6 +113,7 @@ function LoginForm({ onClose, switchToRegister }) {
                     </strong>{' '}
                 </p>
             </div>
+            <Toaster />
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { Toaster, toast } from 'react-hot-toast';
 
 import styles from './Register.module.scss';
 import { useState } from 'react';
@@ -22,15 +22,26 @@ function RegisterForm({ onClose, switchToLogin }) {
 
     const handleRegisterSuccess = async () => {
         try {
-            await login(username, password);
-            toast.success('Register success', {
-                position: 'top-right',
-                autoClose: 3000,
-            });
-
-            setUsername('');
-            setPassword('');
-            onClose();
+            const isSuccess = await login(username, password);
+            
+            if (isSuccess) {
+                toast('Đăng ký thành công.', {
+                    position: 'top-center',
+                    duration: 3000,
+                    style: {
+                        backgroundColor: 'rgba(25, 25, 25, 0.8)',
+                        color: '#fff',
+                        fontWeight: 'italic',
+                        width: '100%',
+                    },
+                    iconTheme: {
+                        display: 'none',
+                    },
+                });
+                setUsername('');
+                setPassword('');
+                onClose();
+            }
         } catch (error) {
             setError(error.message);
             console('>>> Register error: ', error);
@@ -119,6 +130,7 @@ function RegisterForm({ onClose, switchToLogin }) {
                     </strong>{' '}
                 </p>
             </div>
+            <Toaster />
         </>
     );
 }
