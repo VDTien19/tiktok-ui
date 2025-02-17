@@ -1,31 +1,43 @@
 import classNames from "classnames/bind";
 import { useParams } from 'react-router-dom';
+import { useState } from "react";
 
 import styles from './ProfileHeader.module.scss';
 import { useAuth } from "~/contexts/AuthContext";
 import Image from "~/components/Images";
 import Button from "~/components/Button";
 import { UserFollowedIcon, ShareSolidIcon, ThreeDotIcon, SettingIcon } from '~/components/Icons';
+import { useFollow } from "~/hooks";
+import AuthModal from '~/components/AuthModal';
 
 const cx = classNames.bind(styles);
-function ProfileHeader() {
+function ProfileHeader({ data }) {
     const { nickname } = useParams();
-    console.log("nickname", nickname.slice(1));
 
-    const { userData } = useAuth();
-    console.log("userData", userData);
+    const [showAuthModal, setShowAuthModal] = useState(false);
+
+    const { isFollowed, followCount, toggleFollow } = useFollow(data?.is_followed, data?.followings_count, data?.id);
+
+    const { userData, isAuthenticated } = useAuth();
     const owner = userData?.nickname === nickname.slice(1);
-    console.log("owner", owner);
+
+    const handleFollow = () => {
+        if (!isAuthenticated) {
+            setShowAuthModal(true);
+            return;
+        }
+        toggleFollow();
+    }
 
     return (  
         <div className={cx('wrapper')}>
             <div className={cx('avatar')}>
-                <Image className={cx('avatar-img')} src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/b70a0230adec2382cff97656ff637219~tplv-tiktokx-cropcenter:1080:1080.jpeg?dr=14579&nonce=8009&refresh_token=df58e4ef51cc92fc4e6d1c738937251c&x-expires=1739847600&x-signature=Dcw4USmLyCjts%2FZmrCvxEFLIHuQ%3D&idc=my&ps=13740610&shcp=81f88b70&shp=a5d48078&t=4d5b0474" />
+                <Image className={cx('avatar-img')} src={data?.avatar} />
             </div>
             <div className={cx('info')}>
                 <div className={cx('name')}>
-                    <h1 className={cx('username')}>tiennemix</h1>
-                    <h2 className={cx('full-name')}>Vịt Tẩm Đá</h2>
+                    <h1 className={cx('username')}>{data?.nickname}</h1>
+                    <h2 className={cx('full-name')}>{data?.first_name} {data?.last_name}</h2>
                 </div>
                 <div className={cx('action')}>
                     {owner ? (
@@ -37,12 +49,16 @@ function ProfileHeader() {
                         </div>
                     ) : (
                         <div className={cx('action-list')}>
-                            <Button className={cx('follow-btn')}>
-                                <span>
-                                    <UserFollowedIcon />
-                                    <p className={cx('follow-btn-text')}>Đang Follow</p>
-                                </span>
-                            </Button>
+                            {isFollowed ? (
+                                <Button onClick={handleFollow} className={cx('follow-btn')}>
+                                    <span>
+                                        <UserFollowedIcon />
+                                        <p className={cx('follow-btn-text')}>Đang Follow</p>
+                                    </span>
+                                </Button>
+                            ) : (
+                                <Button onClick={handleFollow} primary>Follow</Button>
+                            )}
                             <Button className={cx('message-btn')}>Tin nhắn</Button>
                             <button className={cx('share-btn')}><ShareSolidIcon /></button>
                             <button className={cx('three-dot-btn')}><ThreeDotIcon width='2rem' /></button>
@@ -51,22 +67,25 @@ function ProfileHeader() {
                 </div>
                 <div className={cx('action-bar')}>
                     <div className={cx('following')}>
-                        <p className={cx('following-count')}>1.2K</p>
+                        <p className={cx('following-count')}>{followCount}</p>
                         <p className={cx('following-text')}>Đang Follow</p>
                     </div>
                     <div className={cx('follower')}>
-                        <p className={cx('follower-count')}>1.2K</p>
+                        <p className={cx('follower-count')}>{data?.followers_count}</p>
                         <p className={cx('follower-text')}>Follower</p>
                     </div>
                     <div className={cx('like')}>
-                        <p className={cx('like-count')}>1.2K</p>
+                        <p className={cx('like-count')}>{data?.likes_count}</p>
                         <p className={cx('like-text')}>Thích</p>
                     </div>
                 </div>
                 <div className={cx('bio')}>
-                    <p className={cx('bio-text')}>Tôi là một người yêu thích âm nhạc và </p>
+                    <p className={cx('bio-text')}>{data?.bio}</p>
                 </div>
             </div>
+            {showAuthModal && (
+                <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(!showAuthModal)} />
+            )}
         </div>
     );
 }
