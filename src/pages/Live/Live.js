@@ -1,4 +1,9 @@
+import { useEffect } from "react";
+
 function Live() {
+    useEffect(() => {
+        document.title = 'Bảng tin trên TikTok LIVE';
+    }, []);
     return (
         <h1
             style={{

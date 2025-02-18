@@ -1,4 +1,9 @@
+import { useEffect } from "react";
+
 function Following() {
+    useEffect(() => {
+        document.title = 'Đang follow - Xem video từ những nhà sáng tạo mà bạn follow | TikTok';
+    }, []);
     return (  
         <h1
             style={{
