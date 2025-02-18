@@ -16,7 +16,7 @@ function ProfileHeader({ data }) {
 
     const [showAuthModal, setShowAuthModal] = useState(false);
 
-    const { isFollowed, followCount, toggleFollow } = useFollow(data?.is_followed, data?.followings_count, data?.id);
+    const { isFollowed, followCount, toggleFollow } = useFollow(data?.is_followed, data?.followers_count, data?.id);
 
     const { userData, isAuthenticated } = useAuth();
     const owner = userData?.nickname === nickname.slice(1);
@@ -67,11 +67,11 @@ function ProfileHeader({ data }) {
                 </div>
                 <div className={cx('action-bar')}>
                     <div className={cx('following')}>
-                        <p className={cx('following-count')}>{followCount}</p>
+                        <p className={cx('following-count')}>{data?.followings_count}</p>
                         <p className={cx('following-text')}>Đang Follow</p>
                     </div>
                     <div className={cx('follower')}>
-                        <p className={cx('follower-count')}>{data?.followers_count}</p>
+                        <p className={cx('follower-count')}>{followCount}</p>
                         <p className={cx('follower-text')}>Follower</p>
                     </div>
                     <div className={cx('like')}>
@@ -80,7 +80,7 @@ function ProfileHeader({ data }) {
                     </div>
                 </div>
                 <div className={cx('bio')}>
-                    <p className={cx('bio-text')}>{data?.bio}</p>
+                    {data?.bio.length > 0 ? (<p className={cx('bio-text')}>{data?.bio}</p>) : (<p className={cx('bio-text')}>No bio yet.</p>)}
                 </div>
             </div>
             {showAuthModal && (
