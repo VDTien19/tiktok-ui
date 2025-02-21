@@ -1,0 +1,36 @@
+.wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 1.2rem 0 2.4rem;
+    height: 44px;
+    background: transparent;
+
+    button {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        padding: 10px 32px;
+        font-size: 1.8rem;
+        text-align: center;
+        color: #73747B;
+        height: 100%;
+        font-weight: 500;
+
+        &.active {
+            color: #000;
+        }
+    }
+
+    .btn-icon {
+        margin-right: 6px;
+    }
+}
+
+.underline {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background-color: black;
+    transition: all 0.3s ease-in-out;
+}
