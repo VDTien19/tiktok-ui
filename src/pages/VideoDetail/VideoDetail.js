@@ -16,6 +16,10 @@ const cx = classNames.bind(styles);
 const initPage = Math.floor(Math.random() * 10);
 
 function VideoDetail() {
+    useEffect(() =>{
+        document.title = "TikTok - Make Your Day";
+    }, [])
+
     const [videoData, setVideoData] = useState(null);
     const [commentData, setCommentData] = useState([]);
     const [commentsReady, setCommentsReady] = useState(false);
