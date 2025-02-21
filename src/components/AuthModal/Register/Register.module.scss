@@ -29,7 +29,7 @@
 }
 
 .input-group_input:is(:focus, :valid) {
-    outline-color: var(--primary);
+    outline-color: #808080;
 }
 
 .input-group_label {
@@ -52,7 +52,7 @@
     scale: 0.8;
     background-color: #fff;
     padding: 0 4px;
-    color: var(--primary);
+    color: #303030;
 }
 
 .error {
