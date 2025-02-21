@@ -7,7 +7,7 @@ import { ClosedIcon } from '~/components/Icons';
 
 const cx = classNames.bind(styles);
 
-function Modal({ children, isOpen, onClose }) {
+function Modal({ children, isOpen, onClose, title='', partition=false }) {
 
     if (!isOpen) {
         return null;
@@ -15,13 +15,16 @@ function Modal({ children, isOpen, onClose }) {
 
     return ReactDOM.createPortal(
         <div className={cx('modal')}>
-            <div className={cx('modal-overlay')} onClick={onClose}>
+            <div className={cx('modal-overlay')}>
                 <div
                     className={cx('modal-content')}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <ClosedIcon className={cx('close-btn')} onClick={onClose} />
-                    {children}
+                    <div className={cx('modal-header', {partition: partition})}>
+                        <h1 className={cx('modal-title')}>{title}</h1>
+                        <div className={cx('close-btn')}><ClosedIcon className={cx('close-icon')} onClick={onClose} /></div>
+                    </div>
+                    <div className={cx('modal-body')}>{children}</div>
                 </div>
             </div>
         </div>,
