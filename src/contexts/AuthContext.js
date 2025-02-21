@@ -8,17 +8,18 @@ function useAuth() {
 }
 
 function AuthProvider({ children }) {
-    const [userData, setUserData] = useState(null); 
+    const [userData, setUserData] = useState({});
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-
         if (token) {
-            // Tự động đăng nhập lại người dùng nếu có token
             fetchUserData();
+        } else {
+            setUserData({});
+            setIsAuthenticated(false);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -35,11 +36,11 @@ function AuthProvider({ children }) {
                 setIsAuthenticated(true);
                 setError(null);
             } else {
-                logout(); // Đăng xuất nếu không lấy được dữ liệu người dùng
+                logout();
             }
         } catch (err) {
             console.log('>>> Fetch user data error:', err);
-            logout(); // Đăng xuất nếu token không hợp lệ
+            logout();
         } finally {
             setLoading(false);
         }
@@ -51,7 +52,7 @@ function AuthProvider({ children }) {
             const result = await authServices.login(email, password);
             if (result) {
                 localStorage.setItem('token', result.meta.token);
-                fetchUserData(); // Gọi lại fetchUserData để lấy thông tin người dùng sau khi đăng nhập
+                fetchUserData();
                 setIsAuthenticated(true);
                 setError(null);
                 return true;
@@ -72,7 +73,7 @@ function AuthProvider({ children }) {
         try {
             authServices.logout()
             localStorage.removeItem('token');
-            setUserData(null);
+            setUserData({});
             setIsAuthenticated(false);
         } catch (err) {
             console.log('>>> Logout error:', err);
@@ -89,6 +90,7 @@ function AuthProvider({ children }) {
         error,
         login,
         logout,
+        fetchUserData,
     };
 
     return (
