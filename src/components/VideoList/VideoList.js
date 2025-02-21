@@ -20,9 +20,12 @@ function VideoList() {
     const fetchVideos = async () => {
         try {
             const data = await getListVideo('for-you', page);
-            setVideos((prevVideos) => [...prevVideos, ...data]);
+            console.log("Fetching videos: " + JSON.stringify(data));
+            
+            setVideos((prevVideos) => [...prevVideos, ...(Array.isArray(data) ? data : [])]);
         } catch (err) {
             console.error('Lỗi khi lấy danh sách video: ', err);
+            setVideos((prevVideos) => [...prevVideos]);
         }
     };
 
@@ -31,8 +34,8 @@ function VideoList() {
             if (window.scrollY + window.innerHeight >= document.body.offsetHeight - 100) {
                 setPage((prevPage) => prevPage + 1);
             }
-        }, 300), // Throttle 300ms
-        [],
+        }, 300),
+        [videos.length],
     );
 
     useEffect(() => {
@@ -43,7 +46,9 @@ function VideoList() {
     }, [page]);
 
     useEffect(() => {
-        fetchVideos();
+        if (page >= 0) {
+            fetchVideos();
+        }
     }, [page]);
 
     const playingIndexRef = useRef(null);

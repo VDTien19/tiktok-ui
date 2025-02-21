@@ -59,39 +59,44 @@ function Sidebar() {
 
     useEffect(() => {
         const fetchApi = async () => {
-            let collectedUsers = [];
-            let currentPage = numPageSuggested;
-    
-            while (collectedUsers.length < PER_PAGE) {
-                const data = await userService.getSuggested({
-                    page: currentPage,
-                    perPage: PER_PAGE,
-                });
-    
-                // Lọc các user chưa follow
-                const filteredUsers = data.filter(user => user.is_followed === false);
-    
-                // Thêm vào danh sách tạm thời
-                collectedUsers = [...collectedUsers, ...filteredUsers];
-    
-                // Thoát nếu không còn user để lấy
-                if (data.length < PER_PAGE) break;
-    
-                // Tăng số trang để gọi tiếp
-                currentPage++;
-            }
-    
-            // Loại bỏ user trùng lặp trước khi cập nhật state
-            setSuggestedUsers((prevUser) => {
-                const uniqueUsers = [...prevUser, ...collectedUsers]
-                    .reduce((acc, user) => {
-                        if (!acc.some(existingUser => existingUser.id === user.id)) {
-                            acc.push(user);
-                        }
-                        return acc;
-                    }, []);
-                return uniqueUsers;
+            const response = await userService.getSuggested({
+                page: numPageSuggested,
+                perPage: PER_PAGE,
             });
+            setSuggestedUsers(response);
+            // let collectedUsers = [];
+            // let currentPage = numPageSuggested;
+    
+            // while (collectedUsers.length < PER_PAGE) {
+            //     const data = await userService.getSuggested({
+            //         page: currentPage,
+            //         perPage: PER_PAGE,
+            //     });
+    
+            //     // Lọc các user chưa follow
+            //     const filteredUsers = data.filter(user => user.is_followed === false);
+    
+            //     // Thêm vào danh sách tạm thời
+            //     collectedUsers = [...collectedUsers, ...filteredUsers];
+    
+            //     // Thoát nếu không còn user để lấy
+            //     if (data.length < PER_PAGE) break;
+    
+            //     // Tăng số trang để gọi tiếp
+            //     currentPage++;
+            // }
+    
+            // // Loại bỏ user trùng lặp trước khi cập nhật state
+            // setSuggestedUsers((prevUser) => {
+            //     const uniqueUsers = [...prevUser, ...collectedUsers]
+            //         .reduce((acc, user) => {
+            //             if (!acc.some(existingUser => existingUser.id === user.id)) {
+            //                 acc.push(user);
+            //             }
+            //             return acc;
+            //         }, []);
+            //     return uniqueUsers;
+            // });
         };
     
         fetchApi();
