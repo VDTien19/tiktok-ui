@@ -76,10 +76,8 @@
     align-items: center;
 
     &:hover {
-        // transform: rotate(90deg);
-        // transition: transform ease-in .3s;
-        opacity: .7;
-        transition: opacity ease-in .2s;
+        fill: #7e7e7e;
+        transition: fill ease-out .2s;
     }
 }
 

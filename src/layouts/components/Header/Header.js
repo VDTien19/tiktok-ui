@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -129,11 +129,6 @@ function Header() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // if (isAuthenticated) {
-    //     console.log('userData: ', userData);
-    //     console.log("isAuthenticated: ", isAuthenticated);
-    // }
-
     // Handle logic
     const handleChangeMenu = (menuItem) => {
         // console.log(menuItem);
@@ -249,13 +244,13 @@ function Header() {
                                     content="Upload video"
                                     placement="bottom"
                                 >
-                                    <Link to={config.routes.upload} >
+                                    <Link to={config.routes.upload}>
                                         <button className={cx('action-btn')}>
                                             <UploadIcon
                                                 className={cx('upload-icon')}
                                             />
                                         </button>
-                                    </Link >
+                                    </Link>
                                 </Tippy>
                                 <Tippy content="Mailbox" placement="bottom">
                                     <button className={cx('action-btn')}>
@@ -274,7 +269,7 @@ function Header() {
                             </>
                         ) : (
                             <>
-                                <Button text>Upload</Button>
+                                <Button text onClick={() => setShowAuthModal(true)}>Upload</Button>
                                 <Button primary onClick={handleOpenForm}>
                                     Log in
                                 </Button>
@@ -311,9 +306,5 @@ function Header() {
         </>
     );
 }
-
-// setTimeout(() => {
-//     debugger;
-// }, 5000)
 
 export default Header;
