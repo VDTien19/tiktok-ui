@@ -20,7 +20,7 @@ function VideoList() {
     const fetchVideos = async () => {
         try {
             const data = await getListVideo('for-you', page);
-            console.log("Fetching videos: " + JSON.stringify(data));
+            // console.log("Fetching videos: " + JSON.stringify(data));
             
             setVideos((prevVideos) => [...prevVideos, ...(Array.isArray(data) ? data : [])]);
         } catch (err) {
