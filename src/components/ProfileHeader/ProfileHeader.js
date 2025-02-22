@@ -16,7 +16,7 @@ function ProfileHeader({ data }) {
     const { nickname } = useParams();
 
     const [showAuthModal, setShowAuthModal] = useState(false);
-    const [showEditProfile, setShowEditProfile] = useState(true);
+    const [showEditProfile, setShowEditProfile] = useState(false);
 
     const { isFollowed, followCount, toggleFollow } = useFollow(data?.is_followed, data?.followers_count, data?.id);
 
