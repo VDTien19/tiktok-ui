@@ -9,12 +9,14 @@ import Button from "~/components/Button";
 import { UserFollowedIcon, ShareSolidIcon, ThreeDotIcon, SettingIcon } from '~/components/Icons';
 import { useFollow } from "~/hooks";
 import AuthModal from '~/components/AuthModal';
+import EditProfileForm from "~/components/EditProfileForm";
 
 const cx = classNames.bind(styles);
 function ProfileHeader({ data }) {
     const { nickname } = useParams();
 
     const [showAuthModal, setShowAuthModal] = useState(false);
+    const [showEditProfile, setShowEditProfile] = useState(true);
 
     const { isFollowed, followCount, toggleFollow } = useFollow(data?.is_followed, data?.followers_count, data?.id);
 
@@ -42,7 +44,7 @@ function ProfileHeader({ data }) {
                 <div className={cx('action')}>
                     {owner ? (
                         <div className={cx('action-list')}>
-                            <Button primary className={cx('edit-profile-btn')}>Sửa hồ sơ</Button>
+                            <Button onClick={() => setShowEditProfile(!showEditProfile)} primary className={cx('edit-profile-btn')}>Sửa hồ sơ</Button>
                             <Button className={cx('post-adv')}>Quảng bá bài đăng</Button>
                             <button className={cx('setting-btn')}><SettingIcon /></button>
                             <button className={cx('share-btn')}><ShareSolidIcon /></button>
@@ -85,6 +87,9 @@ function ProfileHeader({ data }) {
             </div>
             {showAuthModal && (
                 <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(!showAuthModal)} />
+            )}
+            {showEditProfile && (
+                <EditProfileForm isOpen={showEditProfile} onClose={() => setShowEditProfile(!showEditProfile)} />
             )}
         </div>
     );
