@@ -45,7 +45,7 @@ function AccountPreview({ data }) {
                             src={data.avatar}
                             alt={data.nickname}
                             className={cx('avatar')}
-                            fallback="https://cdn.pixabay.com/photo/2021/06/15/12/28/tiktok-6338429_1280.png"
+                            // fallback="https://cdn.pixabay.com/photo/2021/06/15/12/28/tiktok-6338429_1280.png"
                         />
                     </Link>
                     <Button

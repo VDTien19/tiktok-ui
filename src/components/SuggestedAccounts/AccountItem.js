@@ -41,7 +41,7 @@ function AccountItem({ data }) {
                             className={cx('avatar')}
                             src={data.avatar}
                             alt={data.nickname}
-                            fallback="https://cdn.pixabay.com/photo/2021/06/15/12/28/tiktok-6338429_1280.png"
+                            // fallback="https://cdn.pixabay.com/photo/2021/06/15/12/28/tiktok-6338429_1280.png"
                         />
                         <div className={cx('item-info')}>
                             <p className={cx('nickname')}>
