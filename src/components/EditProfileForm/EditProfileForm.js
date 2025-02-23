@@ -80,10 +80,10 @@ function EditProfileForm({ isOpen, onClose }) {
                         </div>
                     </div> */}
                     <div className={cx('footer')}>
-                        <button>
+                        <button className={cx('cancel-btn')}>
                             Hủy
                         </button>
-                        <button>
+                        <button className={cx('save-btn', 'active')}>
                             Lưu
                         </button>
                     </div>

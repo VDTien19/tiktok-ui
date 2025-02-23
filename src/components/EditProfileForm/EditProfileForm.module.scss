@@ -102,6 +102,7 @@
 }
 
 .bio {
+    font-family: var(--font-family);
     width: 360px;
     height: 100px;
     font-size: 16px;
@@ -119,15 +120,41 @@
 
 .footer {
     float: right;
-    height: 36px;
     line-height: 36px;
     margin-top: 8px;
 
     button {
-        cursor: pointer;
+        width: 80px;
+        height: 36px;
         padding: 4px 6px;
         border-radius: 4px;
-        border: 1px solid #ccc;
         margin-top: 8px;
+        font-size: 1.4rem;
+        font-weight: 600;
+    }
+
+    .cancel-btn {
+        cursor: pointer;
+        margin-right: 24px;
+        border: 1px solid #ccc;
+
+        &:hover {
+            border: 1px solid #969696;
+        }
+    }
+
+    .save-btn {
+        color: #969696;
+
+        &.active {
+            cursor: pointer;
+            background: var(--primary);
+            color: var(--white);
+
+            &:hover {
+                border-color: var(--primary);
+                background: linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), #FE2C55;
+            }
+        }
     }
 }
