@@ -109,7 +109,7 @@ function ActionBar({ data, direction='vertical', followAction=false, shareAction
                     <span className={cx('like-count')}>{likeCount}</span>
                 </button>
                 <button onClick={handleComment} className={cx('comment-action')}>
-                    {(link && isAuthenticated) ? (
+                    {(link) ? (
                         <Link to={`/@${data?.user.nickname}/video/${data?.id}`} className={cx('comment-link')}>
                             <div className={cx('comment-icon')}>
                                 <Image

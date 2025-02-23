@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 
 import styles from './CommentForm.module.scss';
 import { MentionIcon, EmojiIcon } from '~/components/Icons';
-import { createComment } from '~/services/commentServices'
+import { createComment } from '~/services/commentServices';
 
 const cx = classNames.bind(styles);
 function CommentForm({ idVideo, refetchComments }) {

@@ -105,6 +105,27 @@
 .comment-section {
     flex: 1;
     position: relative;
+
+    .comment-section__login {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-top: 1px solid #eee;
+
+        .comment-section__login-text {
+            font-size: 1.8rem;
+            color: var(--primary);
+
+            button {
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 1.8rem;
+                color: var(--primary);
+                text-decoration: underline;
+            }
+        }
+    }
 }
 
 .loading {

@@ -11,6 +11,8 @@ import VideoComment from '~/components/VideoComment';
 import { ClosedIcon, ArrowIcon } from '~/components/Icons';
 import { getVideo, getListVideo } from '~/services/videoServices';
 import { getComment } from '~/services/commentServices';
+import { useAuth } from '~/contexts/AuthContext';
+import AuthModal from '~/components/AuthModal';
 
 const cx = classNames.bind(styles);
 const initPage = Math.floor(Math.random() * 10);
@@ -19,7 +21,10 @@ function VideoDetail() {
     useEffect(() =>{
         document.title = "TikTok - Make Your Day";
     }, [])
+    
+    const { isAuthenticated } = useAuth();
 
+    const [showAuthModal, setShowAuthModal] = useState(false);
     const [videoData, setVideoData] = useState(null);
     const [commentData, setCommentData] = useState([]);
     const [commentsReady, setCommentsReady] = useState(false);
@@ -52,7 +57,7 @@ function VideoDetail() {
 
         fetchDataVideo(id);
         fetchDataComment(id);
-    }, [id]);
+    }, [id, isAuthenticated]);
 
     const refetchComments = async () => {
         try {
@@ -159,14 +164,25 @@ function VideoDetail() {
                 <div className={cx('info-section')}>
                     <VideoPosterInfo dataUser={videoData} />
                 </div>
-                <div className={cx('comment-section')}>
-                    {commentsReady ? (
-                        <CommentSection dataComment={commentData} idVideo={id} refetchComments={refetchComments} />
-                    ) : (
-                        <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />
-                    )}
-                </div>
+                {isAuthenticated ? (
+                    <div className={cx('comment-section')}>
+                        {commentsReady ? (
+                            <CommentSection dataComment={commentData} idVideo={id} refetchComments={refetchComments} />
+                        ) : (
+                            <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />
+                        )}
+                    </div>
+                ) : (
+                    <div className={cx('comment-section')}>
+                        <div className={cx('comment-section__login')}>
+                            <p className={cx('comment-section__login-text')}>
+                                You need <button onClick={() => setShowAuthModal(true)}>login</button> to comment.
+                            </p>
+                        </div>
+                    </div>
+                )}
             </div>
+            {showAuthModal && <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(!showAuthModal)} />}
         </div>
     );
 }
