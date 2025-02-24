@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import { useRef, useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { Toaster, toast } from 'react-hot-toast';
 
+import { useAuth } from '~/contexts/AuthContext';
 import { useFollow } from '~/hooks';
 import styles from './VideoPosterInfo.module.scss';
 import Image from '~/components/Images';
@@ -70,6 +71,11 @@ const MENU_ITEMS = [
 
 
 function VideoPosterInfo({ dataUser }) {
+    const { userData } = useAuth();
+    const { nickname } = useParams();
+
+    const owner = userData.nickname === nickname.slice(1)
+
     const urlVideoRef = useRef(null);
 
     const { isFollowed, toggleFollow } = useFollow(
@@ -156,9 +162,13 @@ function VideoPosterInfo({ dataUser }) {
                         Following
                     </Button>
                 )} */}
-                <Button onClick={handleFollow} primary={!isFollowed} outline={isFollowed} className={cx('follow-btn')}>
-                    {isFollowed ? 'Following' : 'Follow'}
-                </Button>
+                {owner ? (
+                    <Button small outline style={{ marginLeft: '5rem'}}>Xóa</Button>
+                ) : (
+                    <Button onClick={handleFollow} primary={!isFollowed} outline={isFollowed} className={cx('follow-btn')}>
+                        {isFollowed ? 'Following' : 'Follow'}
+                    </Button>
+                )}
             </header>
             <div className={cx('content')}>
                 <h1 className={cx('video-desc')}>
