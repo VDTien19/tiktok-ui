@@ -52,7 +52,7 @@ function AuthProvider({ children }) {
             const result = await authServices.login(email, password);
             if (result) {
                 localStorage.setItem('token', result.meta.token);
-                fetchUserData();
+                await fetchUserData();
                 setIsAuthenticated(true);
                 setError(null);
                 return true;
