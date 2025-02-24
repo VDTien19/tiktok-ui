@@ -63,7 +63,8 @@ function Sidebar() {
                 page: numPageSuggested,
                 perPage: PER_PAGE,
             });
-            setSuggestedUsers(response);
+            setSuggestedUsers(prev => [...prev, ...response]);
+            
             // let collectedUsers = [];
             // let currentPage = numPageSuggested;
     
