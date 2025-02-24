@@ -50,10 +50,18 @@
             
                 &:focus {
                     background: rgba(22, 24, 35, 0.06);
-                    outline: rgba(22, 24, 35, 0.2) solid 1.5px;
+                    border-bottom: 1px solid #ccc;
+                    // outline: rgba(22, 24, 35, 0.2) solid 1.5px;
                 }
             }
         }
+    }
+}
+
+.nickname {
+    input {
+        color: #808080 !important;
+        pointer-events: none;
     }
 }
 

@@ -1,35 +1,100 @@
 import { useState, useRef } from 'react';
-import classNames from "classnames/bind";
+import classNames from 'classnames/bind';
+import { Toaster, toast } from 'react-hot-toast';
 
 import styles from './EditProfileForm.module.scss';
 import Modal from '~/components/Modal';
 import Image from '~/components/Images';
 import { EditIcon } from '~/components/Icons';
+import { useAuth } from '~/contexts/AuthContext';
+import { updateUser } from '~/services/authServices';
 
 const cx = classNames.bind(styles);
 function EditProfileForm({ isOpen, onClose }) {
+    const { userData } = useAuth();
+
     const fileInputRef = useRef(null);
-    const handleButtonClick = () => {
-        fileInputRef.current.click();
+
+    const [editData, setEditData] = useState({
+        first_name: userData.first_name || '',
+        last_name: userData.last_name || '',
+        bio: userData.bio || '',
+        avatar: userData.avatar || '',
+    });
+
+    const handleChangeAvatar = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imgUrl = URL.createObjectURL(file);
+
+            setEditData((prev) => ({ ...prev, avatar: imgUrl }));
+        }
     };
 
-    return (  
-        <Modal title='Sửa hồ sơ' partition isOpen={isOpen} onClose={onClose}>
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setEditData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSave = async () => {
+        try {
+            const res = await updateUser(
+                editData.first_name,
+                editData.last_name,
+                editData.avatar,
+                editData.bio
+            );
+
+            if (res) {
+                onClose();
+                toast('Đăng nhập thành công.', {
+                    position: 'top-center',
+                    duration: 3000,
+                    style: {
+                        backgroundColor: 'rgba(25, 25, 25, 0.8)',
+                        color: '#fff',
+                        fontWeight: 'italic',
+                        width: '100%',
+                    },
+                    iconTheme: {
+                        display: 'none',
+                    },
+                });
+            }
+        } catch (e) {
+            console.error("Lỗi cập nhật profile: " + e)
+        }
+    };
+
+    return (
+        <Modal title="Sửa hồ sơ" partition isOpen={isOpen} onClose={onClose}>
             <div className={cx('wrapper')}>
                 <div className={cx('form')}>
                     <div className={cx('form-group', 'avatar')}>
                         <span className={cx('label')}>Ảnh hồ sơ</span>
                         <div className={cx('content')}>
                             <div className={cx('image')}>
-                                <Image className={cx('image-url')} src='https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/b70a0230adec2382cff97656ff637219~tplv-tiktokx-cropcenter:1080:1080.jpeg?dr=14579&nonce=6724&refresh_token=9d0606b786b0115bfa0d41c336f5185b&x-expires=1740380400&x-signature=PMBQm9657y%2Fat4nfpsYcBctYXeY%3D&idc=my&ps=13740610&shcp=81f88b70&shp=a5d48078&t=4d5b0474' />
-                                <button className={cx('edit-btn')} onClick={handleButtonClick}>
-                                    <EditIcon className={cx('edit-icon')} width='1.8rem' height='1.8rem' />
+                                <Image
+                                    className={cx('image-url')}
+                                    src={editData.avatar || ''}
+                                />
+                                {/* <img className={cx('image-url')} src={editData.avatar || ''} alt={userData.nickname} /> */}
+                                <button
+                                    className={cx('edit-btn')}
+                                    onClick={() => fileInputRef.current.click()}
+                                >
+                                    <EditIcon
+                                        className={cx('edit-icon')}
+                                        width="1.8rem"
+                                        height="1.8rem"
+                                    />
                                     <input
                                         ref={fileInputRef}
                                         type="file"
                                         id="fileInput"
+                                        accept="image/*"
                                         style={{ display: 'none' }}
-                                        onChange={(e) => console.log("File selected:", e.target.files[0])}
+                                        onChange={handleChangeAvatar}
                                     />
                                 </button>
                             </div>
@@ -39,25 +104,61 @@ function EditProfileForm({ isOpen, onClose }) {
                         <span className={cx('label')}>TikTok ID</span>
                         <div className={cx('content')}>
                             <p className={cx('nickname')}>
-                                <input type="text" value='tienne' />
+                                <input
+                                    readOnly
+                                    type="text"
+                                    value={userData.nickname}
+                                />
                             </p>
-                            <p className={cx('url-profile')}>www.tiktok.com/@tiennemix</p>
-                            <p className={cx('note')}>TikTok ID chỉ có thể bao gồm chữ cái, chữ số, dấu gạch dưới và dấu chấm. Khi thay đổi TikTok ID, liên kết hồ sơ của bạn cũng sẽ thay đổi.</p>
+                            <p
+                                className={cx('url-profile')}
+                            >{`www.tiktok.com/@${userData.nickname}`}</p>
+                            <p className={cx('note')}>
+                                TikTok ID chỉ có thể bao gồm chữ cái, chữ số,
+                                dấu gạch dưới và dấu chấm. Khi thay đổi TikTok
+                                ID, liên kết hồ sơ của bạn cũng sẽ thay đổi.
+                            </p>
                         </div>
                     </div>
                     <div className={cx('form-group')}>
                         <span className={cx('label')}>Tên</span>
                         <div className={cx('content')}>
                             <p className={cx('full-name')}>
-                                <input type="text" value='Vịt Tẩm Đá' />
+                                <div className={cx('first-name')}>
+                                    <span>Họ: </span>
+                                    <input
+                                        onChange={handleInputChange}
+                                        type="text"
+                                        name="first_name"
+                                        value={editData.first_name}
+                                    />
+                                </div>
+                                <div className={cx('last-name')}>
+                                    <span>Tên: </span>
+                                    <input
+                                        onChange={handleInputChange}
+                                        type="text"
+                                        name="last_name"
+                                        value={editData.last_name}
+                                    />
+                                </div>
                             </p>
-                            <p className={cx('note')}>Bạn chỉ có thể thay đổi biệt danh 7 ngày một lần. Bạn có thể tiếp tục thay đổi biệt danh sau ngày Feb 23, 2025.</p>
+                            <p className={cx('note')}>
+                                Bạn chỉ có thể thay đổi biệt danh 7 ngày một
+                                lần.
+                            </p>
                         </div>
                     </div>
                     <div className={cx('form-group')}>
                         <span className={cx('label')}>Tiểu sử</span>
                         <div className={cx('content')}>
-                            <textarea className={cx('bio')} name="" id="" placeholder='Tiểu sử...' value='Sô cô la: Music From Ninh Bình Mua - Đặt nhạc liên hệ: 0942.852.933' />
+                            <textarea
+                                onChange={handleInputChange}
+                                className={cx('bio')}
+                                name="bio"
+                                placeholder="Tiểu sử..."
+                                value={editData.bio}
+                            />
                         </div>
                     </div>
                     {/* <div className={cx('form-group')}>
@@ -80,15 +181,16 @@ function EditProfileForm({ isOpen, onClose }) {
                         </div>
                     </div> */}
                     <div className={cx('footer')}>
-                        <button className={cx('cancel-btn')}>
+                        <button onClick={onClose} className={cx('cancel-btn')}>
                             Hủy
                         </button>
-                        <button className={cx('save-btn', 'active')}>
+                        <button onClick={handleSave} className={cx('save-btn', 'active')}>
                             Lưu
                         </button>
                     </div>
                 </div>
             </div>
+            <Toaster />
         </Modal>
     );
 }
