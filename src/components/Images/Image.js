@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { useState, forwardRef } from 'react';
+import { useState, forwardRef, useEffect } from 'react';
 import images from '~/assets/images';
 import styles from './Image.module.scss';
 
@@ -18,6 +18,10 @@ const Image = forwardRef(
         ref,
     ) => {
         const [fallback, setFallback] = useState('');
+
+        useEffect(() => {
+            setFallback('');
+        }, [src]);
 
         const handleError = () => {
             setFallback(customFallback);
