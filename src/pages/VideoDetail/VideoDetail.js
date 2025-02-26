@@ -103,9 +103,9 @@ function VideoDetail() {
         const nextVideo = videos[currentIndex + 1];
         setVideoHistory((prevHistory) => [...prevHistory, id]); // Lưu video đã xem
         navigate(`/@${nextVideo.user.nickname}/video/${nextVideo.id}`);
-        // console.log({currentIndex, videos})
+        console.log({currentIndex, videos})
         if (currentIndex === videos.length - 2) {
-            // console.log("Page add 1");
+            console.log("Page add 1");
             setPage(prev => prev + 1);
         }
     };
