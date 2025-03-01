@@ -47,7 +47,7 @@ function EditProfileForm({ isOpen, onClose }) {
 
             if (res) {
                 onClose();
-                toast('Đăng nhập thành công.', {
+                toast('Cập nhật thành công.', {
                     position: 'top-center',
                     duration: 3000,
                     style: {
