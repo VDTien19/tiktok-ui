@@ -1,0 +1,41 @@
+.wrapper {
+    width: 100%;
+    height: calc(100vh - var(--default-layout-header-heigh));
+
+    .container {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 60%;
+        text-align: center;
+        margin: 60px auto;
+        margin-top: 120px;
+        padding: 40px 26px;
+        border: 2px dashed rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+
+        .upload-btn {
+            width: 300px;
+            height: 40px;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        .info {
+            font-weight: 600;
+            margin: 4px 0;
+        }
+
+        .note {
+            font-weight: 600;
+            color: #898989;
+            font-size: 1.4rem;
+            margin: 3px 0;
+        }
+
+        &:hover {
+            border-color: var(--primary);
+        }
+    }
+}
