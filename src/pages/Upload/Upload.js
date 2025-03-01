@@ -8,7 +8,6 @@ import styles from "./Upload.module.scss";
 import Image from "~/components/Images";
 import images from "~/assets/images";
 
-import videos from '~/assets/videos';
 import Button from "~/components/Button";
 
 const cx = classNames.bind(styles);
