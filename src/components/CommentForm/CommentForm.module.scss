@@ -82,6 +82,10 @@
             line-height: 39px;
             text-align: right;
             margin-right: 4px;
+            margin-left: 4px;
+            display: flex;
+            justify-content: center;
+            background: transparent;
 
             &.btn-active {
                 color: var(--primary);
