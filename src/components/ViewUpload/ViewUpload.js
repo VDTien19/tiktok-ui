@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import classNames from "classnames/bind";
 import { Toaster, toast } from "react-hot-toast";
 
@@ -8,6 +8,8 @@ import Button from "~/components/Button";
 
 const cx = classNames.bind(styles);
 function ViewUpload({ onFileSelect }) {
+
+    const [isDragging, setIsDragging] = useState(false);
 
     const inputRef = useRef(null);
 
@@ -34,6 +36,7 @@ function ViewUpload({ onFileSelect }) {
 
     const handleDropVideo = (e) => {
         e.preventDefault();
+        setIsDragging(false);
         const file = e.dataTransfer.files?.[0];
         if (file && file.type.startsWith("video/")) {
             onFileSelect(file);
@@ -54,12 +57,30 @@ function ViewUpload({ onFileSelect }) {
         }
     }
 
+    const handleDragEnter = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
     return ( 
         <div className={cx('wrapper')}>
-            <div className={cx('container')} 
+            <div className={cx('container', { active: isDragging })} 
                  onClick={() => inputRef.current.click()}
-                 onDragOver={(e) => e.preventDefault()}
+                //  onDragOver={(e) => e.preventDefault()}
                  onDrop={handleDropVideo}
+                 onDragEnter={handleDragEnter}
+                 onDragOver={handleDragOver}
+                 onDragLeave={handleDragLeave}
             >
                 <span><UploadIcon width='5rem' height="5rem" /></span>
                 <span className={cx('info')}>Select video to upload</span>

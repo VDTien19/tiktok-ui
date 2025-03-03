@@ -20,11 +20,6 @@ function Upload() {
 
     const videoRef = useRef(null);
 
-    // useEffect(() => {
-    //     console.log("video: " + videoRef);
-        
-    // }, [videoRef]);
-
     const [selectedFile, setSelectedFile] = useState(null)
     const [showIconPause, setShowIconPause] = useState(false);
     // const [spinAnimate, setSpinAnimate] = useState(false)
@@ -36,11 +31,11 @@ function Upload() {
     };
     
     if (selectedFile) {
-        console.log("File details:", { 
+        console.log("File details:", {
             name: selectedFile.name, 
             size: selectedFile.size, 
             type: selectedFile.type, 
-            lastModified: selectedFile.lastModified ,
+            lastModified: selectedFile.lastModified,
             url: videoUrl,
             length: selectedFile.duration
         });
@@ -57,6 +52,20 @@ function Upload() {
             // setSpinAnimate(false);
         }
     }
+
+    const handleChangeVideo = () => {
+        setSelectedFile(null);
+        if(videoUrl) {
+            URL.revokeObjectURL(videoUrl);
+        }
+    }
+
+    useEffect(() => {
+        return () => {
+            if(videoUrl) {URL.revokeObjectURL(videoUrl);
+            }
+        }
+    })
 
     return ( 
         <div className={cx('wrapper')}>
@@ -90,19 +99,20 @@ function Upload() {
                             </div>
                             <div className={cx('actions')}>
                                 <div className={cx('avatar')}>
-                                    <Image className={cx('avatar-image')} src={images.noImage} />
+                                    <Image className={cx('avatar-image')} src={userData.avatar} />
                                 </div>
                                 <ActionIcon />
                             </div>
                             <div className={cx('video-content')}>
                                 <div className={cx('full-name')}>{`${userData.first_name} ${userData.last_name}`}</div>
-                                <div className={cx('description')}>{selectedFile.name.slice(0, -4)}</div>
+                                {/* <div className={cx('description')}>{selectedFile.name.slice(0, -4)}</div> */}
+                                <input className={cx('description')} type="text" value={selectedFile.name.slice(0, -4)} />
                                 <div className={cx('video-content__footer')}>
                                     <div className={cx('music')}>
                                         <MusicNoteIcon width="1.6rem" height="1.6rem" className={cx('music-icon')} /> Original sound - {userData.nickname}
                                     </div>
                                     <div className={cx('thumb', 'spin')}>
-                                        <Image className={cx('thumb-image')} src={images.noImage} />
+                                        <Image className={cx('thumb-image')} src={userData.avatar} />
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +120,10 @@ function Upload() {
                         <div className={cx('edit-video')}>
                             <div className={cx('caption')}>
                                 <p>Caption</p>
-                                <input type="text" value={selectedFile.name.slice(0, -4)} readOnly />
+                                <div className={cx('video-title')}>
+                                    <input type="text" value={selectedFile.name.slice(0, -4)} />
+                                    <Button onClick={handleChangeVideo} leftIcon={<LiveIcon className={cx('change-icon')} width="2.2rem" height="2.2rem"/>} primary className={cx('change-video-btn')}>Thay đổi</Button>
+                                </div>
                             </div>
                             <div className={cx('cover')}>
                                 <p>Cover</p>
@@ -118,27 +131,32 @@ function Upload() {
                             </div>
                             <div className={cx('released')}>
                                 <p>Who can view this video</p>
-                                <select name="viewer" id="">
+                                <select className={cx('select-box')} name="viewer" id="">
                                     <option value="public">Public</option>
                                     <option value="private">Private</option>
                                     <option value="friends">Friends</option>
                                 </select>
                             </div>
                             <div className={cx('allowable')}>
-                                <input type="checkbox" name="comment" id="" />
-                                <label>Comments</label>
-                                <input type="checkbox" name="duet" id="" />
-                                <label>Duet</label>
+                                <p>Allow users to:</p>
+                                <div className={cx('allowable-option')}>
+                                    <input type="checkbox" name="comment" id="comment" />
+                                    <label htmlFor="comment">Comments</label>
+                                    <input type="checkbox"name="duet" id="duet" />
+                                    <label htmlFor="duet">Duet</label>
+                                </div>
                             </div>
                             <div className={cx('copyright')}>
-                                <p>Run a copyright check</p>
-                                <input type="checkbox" name="copyright" id="" />
+                                <div className={cx('copyright-check')}>
+                                    <p>Run a copyright check</p>
+                                    <input type="checkbox" name="copyright" id="" />
+                                </div>
                                 <p className={cx('copyright-note')}>
-                                    We'll check your video for potential copyright infringements on used sounds. If infringements are found, you can edit the video before posting.<strong>Learn more</strong>
+                                    We'll check your video for potential copyright infringements on used sounds. If infringements are found, you can edit the video before posting. <strong>Learn more</strong>
                                 </p>
                             </div>
                             <div className={cx('action')}>
-                                <button>Discard</button>
+                                <button className={cx('discard-btn')}>Discard</button>
                                 <Button primary>Upload</Button>
                             </div>
                         </div>

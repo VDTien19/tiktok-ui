@@ -1,6 +1,7 @@
 .wrapper {
     width: 100%;
     height: calc(100vh - var(--default-layout-header-heigh));
+    display: flex;
 
     .container {
         cursor: pointer;
@@ -8,6 +9,7 @@
         flex-direction: column;
         justify-content: center;
         width: 60%;
+        height: 50vh;
         text-align: center;
         margin: 60px auto;
         margin-top: 120px;
@@ -36,6 +38,11 @@
 
         &:hover {
             border-color: var(--primary);
+        }
+
+        &.active {
+            border-color: var(--primary);
+            background-color: rgba(255, 0, 0, 0.05);
         }
     }
 }
