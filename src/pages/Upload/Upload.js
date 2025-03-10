@@ -1,7 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { Toaster, toast } from "react-hot-toast";
 
 import {
         ActionIcon,
@@ -16,11 +18,14 @@ import styles from './Upload.module.scss';
 import Image from '~/components/Images';
 import images from '~/assets/images';
 import Button from '~/components/Button';
+import { uploadVideo } from '~/services/videoServices';
 
 const cx = classNames.bind(styles);
 
 function Upload() {
     const { userData } = useAuth();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         document.title = 'TikTok Studio';
@@ -35,6 +40,10 @@ function Upload() {
     const [selectedFrame, setSelectedFrame] = useState(0);
     const [frames, setFrames] = useState([]);
     const [loadingFrame, setLoadingFrame] = useState(false);
+    const [loadingBtn, setLoadingBtn] = useState(false);
+
+    const [allows, setAllows] = useState(['comment', 'duet', 'stitch']);
+    const [viewable, setViewable] = useState('public');
 
     const handleSelectFile = (file) => {
         setSelectedFile(file);
@@ -65,6 +74,12 @@ function Upload() {
     const handleChangeCaptions = (e) => {
         setCaption(e.target.value);
     };
+
+    const toggleAllow = (option) => {
+        setAllows((prev) => 
+            prev.includes(option) ? prev.filter((item) => item !== option) : [...prev, option]
+        )
+    }
 
     // Trích xuất 10 khung ảnh từ video
     const extractFrames = useCallback(async (videoUrl, duration) => {
@@ -129,7 +144,7 @@ function Upload() {
     const handleFrameClick = (index) => {
         const frameCount = 10;
         const timeClicked = (videoDuration / frameCount) * index;
-        setSelectedTime(timeClicked.toFixed(2));
+        setSelectedTime(timeClicked.toFixed(0));
         setSelectedFrame(index);
 
         // Tạo ảnh bìa từ khung được chọn
@@ -148,6 +163,61 @@ function Upload() {
             // setCoverImage(offscreenCanvas.toDataURL('image/png'));
         };
     };
+
+    const handleUpload = async () => {
+        const formData = new FormData();
+        formData.append('description', caption);
+        formData.append('upload_file', selectedFile);
+        formData.append('thumbnail_time', selectedTime);
+        formData.append('viewable', viewable);
+        allows.forEach(allow => formData.append('allows[]', allow));
+
+        try {
+            setLoadingBtn(true);
+            const response = await uploadVideo(formData);
+            
+            if (response) {
+                toast('Tải video thành công.', {
+                    position: 'top-center',
+                    duration: 3000,
+                    style: {
+                        backgroundColor: 'rgba(25, 25, 25, 0.8)',
+                        color: '#fff',
+                        fontWeight: 'italic',
+                        width: '100%',
+                    },
+                    iconTheme: {
+                        display: 'none',
+                    },
+                });
+                setTimeout(() => {
+                    navigate(`/@${userData.nickname}`);
+                }, 1000)
+            } else {
+                setLoadingBtn(false);
+                toast('Có lỗi khi tải video lên. Vui lòng thử lại.', {
+                    position: 'top-center',
+                    duration: 3000,
+                    style: {
+                        backgroundColor: 'rgba(25, 25, 25, 0.8)',
+                        color: '#fff',
+                        fontWeight: 'italic',
+                        width: '100%',
+                    },
+                    iconTheme: {
+                        display: 'none',
+                    },
+                });
+            }
+        } catch (e) {
+            console.error(e);
+        };
+        
+    }
+
+    const handleDiscard = () => {
+        setTimeout(() => { navigate('/') }, 300)
+    }
     
     return (
         <div className={cx('wrapper')}>
@@ -250,7 +320,6 @@ function Upload() {
                                         />
                                     )}
                                 </div>
-                                <p>Time selected: {selectedTime}</p>
                                 {/* <Image src={coverImage} alt="cover-image" className={cx('cover-image')} /> */}
                             </div>
                             <div className={cx('released')}>
@@ -259,6 +328,8 @@ function Upload() {
                                     className={cx('select-box')}
                                     name="viewer"
                                     id=""
+                                    value={viewable}
+                                    onChange={(e) => setViewable(e.target.value)}
                                 >
                                     <option value="public">Public</option>
                                     <option value="private">Private</option>
@@ -272,14 +343,26 @@ function Upload() {
                                         type="checkbox"
                                         name="comment"
                                         id="comment"
+                                        checked={allows.includes('comment')}
+                                        onChange={() => toggleAllow('comment')}
                                     />
                                     <label htmlFor="comment">Comments</label>
                                     <input
                                         type="checkbox"
                                         name="duet"
                                         id="duet"
+                                        checked={allows.includes('duet')}
+                                        onChange={() => toggleAllow('duet')}
                                     />
                                     <label htmlFor="duet">Duet</label>
+                                    <input
+                                        type="checkbox"
+                                        name="stitch"
+                                        id="stitch"
+                                        checked={allows.includes('stitch')}
+                                        onChange={() => toggleAllow('stitch')}
+                                    />
+                                    <label htmlFor="stitch">Stitch</label>
                                 </div>
                             </div>
                             <div className={cx('copyright')}>
@@ -300,13 +383,26 @@ function Upload() {
                                 </p>
                             </div>
                             <div className={cx('action')}>
-                                <button className={cx('discard-btn')}>
+                                <button className={cx('discard-btn')} onClick={handleDiscard}>
                                     Discard
                                 </button>
-                                <Button primary>Upload</Button>
+
+                                <div className={cx('btn-upload')}>
+                                    <Button primary onClick={handleUpload}>Upload</Button>
+                                    
+                                    {loadingBtn && (
+                                        <div className={cx('loading')}>
+                                            <FontAwesomeIcon
+                                                className={cx('loading-icon')}
+                                                icon={faSpinner}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <Toaster />
                 </div>
             )}
         </div>

@@ -34,3 +34,41 @@ export const getUserVideo = async (idVideo) => {
         throw err;
     }
 }
+
+export const uploadVideo = async (formData) => {
+    try {
+        const res = await httpRequest.post('videos', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
+        // console.log("Upload video successfully", res);
+        return res;
+    } catch (err) {
+        console.log('>>> Upload video error: ', err.response ? err.response.data : err.message);
+    }
+}
+
+export const deletedVideo = async (idVideo) => {
+    try {
+        const res = await httpRequest.deleted(`videos/${idVideo}`);
+        console.log("Delete video successfully");
+        return res;
+    } catch (err) {
+        console.log('>>> Delete video error: ', err);
+    }
+}
+
+export const updateVideo = async (idVideo, formData) => {
+    try {
+        const res = await httpRequest.post(`videos/${idVideo}?_method=PATCH`, formData, {
+            header: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
+        console.log("Update video successfully");
+        return res;
+    } catch (err) {
+        console.log('>>> Update video error: ', err);
+    }
+}
