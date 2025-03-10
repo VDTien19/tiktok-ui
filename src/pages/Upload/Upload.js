@@ -1,73 +1,155 @@
-import { useEffect, useRef, useState } from "react";
-import classNames from "classnames/bind";
+import { useEffect, useState, useCallback } from 'react';
+import classNames from 'classnames/bind';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-import { ActionIcon, LiveIcon, MusicNoteIcon, SearchIcon, StaticPauseIcon } from "~/components/Icons";
-import { useAuth } from "~/contexts/AuthContext";
-import ViewUpload from "~/components/ViewUpload";
-import styles from "./Upload.module.scss";
-import Image from "~/components/Images";
-import images from "~/assets/images";
-
-import Button from "~/components/Button";
+import {
+        ActionIcon,
+        LiveIcon,
+        MusicNoteIcon,
+        SearchIcon,
+    } from '~/components/Icons';
+import { useAuth } from '~/contexts/AuthContext';
+import ViewUpload from '~/components/ViewUpload';
+import ViewVideoUpload from '~/components/ViewVideoUpload';
+import styles from './Upload.module.scss';
+import Image from '~/components/Images';
+import images from '~/assets/images';
+import Button from '~/components/Button';
 
 const cx = classNames.bind(styles);
+
 function Upload() {
     const { userData } = useAuth();
-    
+
     useEffect(() => {
         document.title = 'TikTok Studio';
     }, []);
 
-    const videoRef = useRef(null);
-
-    const [selectedFile, setSelectedFile] = useState(null)
-    const [showIconPause, setShowIconPause] = useState(false);
-    // const [spinAnimate, setSpinAnimate] = useState(false)
-    const [videoUrl, setVideoUrl] = useState('')
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [videoUrl, setVideoUrl] = useState('');
+    const [videoDuration, setVideoDuration] = useState(0);
+    const [selectedTime, setSelectedTime] = useState(0);
+    const [caption, setCaption] = useState('');
+    // const [coverImage, setCoverImage] = useState(null);
+    const [selectedFrame, setSelectedFrame] = useState(0);
+    const [frames, setFrames] = useState([]);
+    const [loadingFrame, setLoadingFrame] = useState(false);
 
     const handleSelectFile = (file) => {
         setSelectedFile(file);
         setVideoUrl(URL.createObjectURL(file));
     };
-    
-    if (selectedFile) {
-        console.log("File details:", {
-            name: selectedFile.name, 
-            size: selectedFile.size, 
-            type: selectedFile.type, 
-            lastModified: selectedFile.lastModified,
-            url: videoUrl,
-            length: selectedFile.duration
-        });
-    }
 
-    const handlePlayPause = () => {
-        if (videoRef.current && videoRef.current.paused) {
-            videoRef.current.play();
-            setShowIconPause(false);
-            // setSpinAnimate(true);
-        } else {
-            videoRef.current.pause();
-            setShowIconPause(true);
-            // setSpinAnimate(false);
+    useEffect(() => {
+        if (selectedFile) {
+            setCaption(selectedFile.name.slice(0, -4))
         }
-    }
+    }, [selectedFile])
 
     const handleChangeVideo = () => {
         setSelectedFile(null);
-        if(videoUrl) {
+        if (videoUrl) {
             URL.revokeObjectURL(videoUrl);
         }
-    }
+    };
 
     useEffect(() => {
         return () => {
-            if(videoUrl) {URL.revokeObjectURL(videoUrl);
+            if (videoUrl) {
+                URL.revokeObjectURL(videoUrl);
             }
-        }
-    })
+        };
+    }, [videoUrl]);
 
-    return ( 
+    const handleChangeCaptions = (e) => {
+        setCaption(e.target.value);
+    };
+
+    // Trích xuất 10 khung ảnh từ video
+    const extractFrames = useCallback(async (videoUrl, duration) => {
+        setFrames([]);
+        setSelectedFrame(0);
+        setLoadingFrame(true);
+        
+        const video = document.createElement('video');
+        video.src = videoUrl;
+        video.crossOrigin = "anonymous";
+
+        const frameCount = 10;
+        const frameURLs = [];
+
+        await new Promise((resolve) => {
+            video.onloadedmetadata = () => resolve();
+            video.load();
+        });
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = video.videoWidth / 4;
+        canvas.height = video.videoHeight / 4;
+
+        for (let i = 0; i < frameCount; i++) {
+            const time = (duration / frameCount) * i;
+            video.currentTime = time;
+
+            await new Promise((resolve) => {
+                video.onseeked = () => {
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    frameURLs.push(canvas.toDataURL('image/png')); // Giữ định dạng PNG để không nén
+                    resolve();
+                };
+            });
+        }
+        setLoadingFrame(false);
+        setFrames(frameURLs);
+
+    }, []);
+
+    // Load video và trích xuất khung khi videoUrl thay đổi
+    useEffect(() => {
+        if (!videoUrl) return;
+
+        const video = document.createElement('video');
+        video.src = videoUrl;
+        video.crossOrigin = "anonymous";
+
+        video.onloadedmetadata = () => {
+            setVideoDuration(video.duration);
+            extractFrames(videoUrl, video.duration);
+        };
+
+        return () => {
+            if (videoUrl) URL.revokeObjectURL(videoUrl);
+        };
+    }, [videoUrl, extractFrames]);
+
+    // Xử lý click vào khung ảnh
+    const handleFrameClick = (index) => {
+        const frameCount = 10;
+        const timeClicked = (videoDuration / frameCount) * index;
+        setSelectedTime(timeClicked.toFixed(2));
+        setSelectedFrame(index);
+
+        // Tạo ảnh bìa từ khung được chọn
+        const video = document.createElement('video');
+        video.src = videoUrl;
+        video.crossOrigin = "anonymous";
+        video.currentTime = timeClicked;
+
+        video.onseeked = () => {
+            const offscreenCanvas = document.createElement('canvas');
+            const ctx = offscreenCanvas.getContext('2d');
+            offscreenCanvas.width = video.videoWidth;
+            offscreenCanvas.height = video.videoHeight;
+
+            ctx.drawImage(video, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
+            // setCoverImage(offscreenCanvas.toDataURL('image/png'));
+        };
+    };
+    
+    return (
         <div className={cx('wrapper')}>
             {!selectedFile ? (
                 <ViewUpload onFileSelect={handleSelectFile} />
@@ -81,8 +163,9 @@ function Upload() {
                         <div className={cx('video-container')}>
                             <Image className={cx('bg-image')} src={images.bgIphone} />
                             <div className={cx('video')}>
-                                <video autoPlay onClick={handlePlayPause} className={cx('video-url')} ref={videoRef} src={videoUrl} loop></video>
-                                {showIconPause && <StaticPauseIcon className={cx('pause-icon')} width='3rem' height='3rem' />}
+                                <ViewVideoUpload
+                                    videoUrl={videoUrl}
+                                />
                             </div>
                             <div className={cx('header')}>
                                 <div className={cx('live')}>
@@ -105,8 +188,7 @@ function Upload() {
                             </div>
                             <div className={cx('video-content')}>
                                 <div className={cx('full-name')}>{`${userData.first_name} ${userData.last_name}`}</div>
-                                {/* <div className={cx('description')}>{selectedFile.name.slice(0, -4)}</div> */}
-                                <input className={cx('description')} type="text" value={selectedFile.name.slice(0, -4)} />
+                                {caption && <input className={cx('description')} type="text" value={caption} readOnly />}
                                 <div className={cx('video-content__footer')}>
                                     <div className={cx('music')}>
                                         <MusicNoteIcon width="1.6rem" height="1.6rem" className={cx('music-icon')} /> Original sound - {userData.nickname}
@@ -121,17 +203,63 @@ function Upload() {
                             <div className={cx('caption')}>
                                 <p>Caption</p>
                                 <div className={cx('video-title')}>
-                                    <input type="text" value={selectedFile.name.slice(0, -4)} />
-                                    <Button onClick={handleChangeVideo} leftIcon={<LiveIcon className={cx('change-icon')} width="2.2rem" height="2.2rem"/>} primary className={cx('change-video-btn')}>Thay đổi</Button>
+                                    <input
+                                        type="text"
+                                        value={caption}
+                                        onChange={handleChangeCaptions}
+                                    />
+                                    <Button
+                                        onClick={handleChangeVideo}
+                                        leftIcon={
+                                            <LiveIcon
+                                                className={cx('change-icon')}
+                                                width="2.2rem"
+                                                height="2.2rem"
+                                            />
+                                        }
+                                        primary
+                                        className={cx('change-video-btn')}
+                                    >
+                                        Thay đổi
+                                    </Button>
                                 </div>
                             </div>
                             <div className={cx('cover')}>
                                 <p>Cover</p>
-                                <canvas></canvas>
+                                <div className={cx('frame-container')}>
+                                    <div className={cx('frame-list')}>
+                                        {frames.map((frame, index) => (
+                                            <div
+                                                key={index}
+                                                className={cx('frame-item')}
+                                                style={{ "--delay": `${index * 0.1}s` }} // Thêm delay động cho mỗi frame
+                                            >
+                                                <img
+                                                    src={frame}
+                                                    alt={`frame-${index}`}
+                                                    className={cx('frame-image', { selected: index === selectedFrame })}
+                                                    onClick={() => handleFrameClick(index)}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {loadingFrame && (
+                                        <FontAwesomeIcon
+                                            className={cx('loading')}
+                                            icon={faSpinner}
+                                        />
+                                    )}
+                                </div>
+                                <p>Time selected: {selectedTime}</p>
+                                {/* <Image src={coverImage} alt="cover-image" className={cx('cover-image')} /> */}
                             </div>
                             <div className={cx('released')}>
                                 <p>Who can view this video</p>
-                                <select className={cx('select-box')} name="viewer" id="">
+                                <select
+                                    className={cx('select-box')}
+                                    name="viewer"
+                                    id=""
+                                >
                                     <option value="public">Public</option>
                                     <option value="private">Private</option>
                                     <option value="friends">Friends</option>
@@ -140,23 +268,41 @@ function Upload() {
                             <div className={cx('allowable')}>
                                 <p>Allow users to:</p>
                                 <div className={cx('allowable-option')}>
-                                    <input type="checkbox" name="comment" id="comment" />
+                                    <input
+                                        type="checkbox"
+                                        name="comment"
+                                        id="comment"
+                                    />
                                     <label htmlFor="comment">Comments</label>
-                                    <input type="checkbox"name="duet" id="duet" />
+                                    <input
+                                        type="checkbox"
+                                        name="duet"
+                                        id="duet"
+                                    />
                                     <label htmlFor="duet">Duet</label>
                                 </div>
                             </div>
                             <div className={cx('copyright')}>
                                 <div className={cx('copyright-check')}>
                                     <p>Run a copyright check</p>
-                                    <input type="checkbox" name="copyright" id="" />
+                                    <input
+                                        type="checkbox"
+                                        name="copyright"
+                                        id=""
+                                    />
                                 </div>
                                 <p className={cx('copyright-note')}>
-                                    We'll check your video for potential copyright infringements on used sounds. If infringements are found, you can edit the video before posting. <strong>Learn more</strong>
+                                    We'll check your video for potential
+                                    copyright infringements on used sounds. If
+                                    infringements are found, you can edit the
+                                    video before posting.{' '}
+                                    <strong>Learn more</strong>
                                 </p>
                             </div>
                             <div className={cx('action')}>
-                                <button className={cx('discard-btn')}>Discard</button>
+                                <button className={cx('discard-btn')}>
+                                    Discard
+                                </button>
                                 <Button primary>Upload</Button>
                             </div>
                         </div>
@@ -164,7 +310,7 @@ function Upload() {
                 </div>
             )}
         </div>
-     );
+    );
 }
 
 export default Upload;
