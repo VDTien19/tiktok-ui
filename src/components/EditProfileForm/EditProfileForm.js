@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import classNames from 'classnames/bind';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 import styles from './EditProfileForm.module.scss';
 import Modal from '~/components/Modal';
@@ -190,7 +190,6 @@ function EditProfileForm({ isOpen, onClose }) {
                     </div>
                 </div>
             </div>
-            <Toaster />
         </Modal>
     );
 }

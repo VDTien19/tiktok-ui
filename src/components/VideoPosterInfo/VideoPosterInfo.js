@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { Link, useParams } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 import { useAuth } from '~/contexts/AuthContext';
 import { useFollow } from '~/hooks';
@@ -235,7 +235,6 @@ function VideoPosterInfo({ dataUser }) {
                 <button onClick={handleClickCopy} className={cx('btn-copy')}>
                     Sao chép liên kết
                 </button>
-                <Toaster />
             </div>
         </div>
     );

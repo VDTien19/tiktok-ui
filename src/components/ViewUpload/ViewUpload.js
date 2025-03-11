@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import classNames from "classnames/bind";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 import styles from './ViewUpload.module.scss';
 import { UploadIcon } from "~/components/Icons";
@@ -100,7 +100,6 @@ function ViewUpload({ onFileSelect }) {
                     onChange={handleFileInput}
                 />
             </div>
-            <Toaster />
         </div>
     );
 }

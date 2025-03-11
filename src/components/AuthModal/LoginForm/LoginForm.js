@@ -1,5 +1,7 @@
 import classNames from 'classnames/bind';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './Login.module.scss';
 import { useState } from 'react';
@@ -12,6 +14,7 @@ function LoginForm({ onClose, switchToRegister }) {
     const { login, error, setError } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleLoginSuccess = () => {
         setUsername('');
@@ -34,14 +37,17 @@ function LoginForm({ onClose, switchToRegister }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const isSuccess = await login(username, password);
 
             if (isSuccess) {
+                setLoading(false);
                 handleLoginSuccess();
             }
             
         } catch (err) {
+            setLoading(false);
             setError('Failed to login. Please check your credentials.');
             console.error('Login error:', err);
         }
@@ -93,12 +99,21 @@ function LoginForm({ onClose, switchToRegister }) {
                         </p>
                     )}
 
-                    <Button
-                        outline={!!username && !!password}
-                        disable={!username || !password}
-                    >
-                        Login
-                    </Button>
+                    <div className={cx('btn-login')}>
+                        <Button
+                            primary={!!username && !!password}
+                            disable={!username || !password}
+                            rounded
+                            className={cx('btn-icon')}
+                        >
+                            Login
+                        </Button>
+                        {loading && (
+                            <div className={cx('loading')}>
+                                <FontAwesomeIcon icon={faSpinner} className={cx('loading-icon')} />
+                            </div>
+                        )}
+                    </div>
                 </form>
             </div>
 
@@ -113,7 +128,6 @@ function LoginForm({ onClose, switchToRegister }) {
                     </strong>{' '}
                 </p>
             </div>
-            <Toaster />
         </div>
     );
 }

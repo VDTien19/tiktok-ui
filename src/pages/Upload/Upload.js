@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 import {
         ActionIcon,
@@ -402,7 +402,6 @@ function Upload() {
                             </div>
                         </div>
                     </div>
-                    <Toaster />
                 </div>
             )}
         </div>

@@ -1,6 +1,8 @@
 import classNames from 'classnames/bind';
 import { useNavigate } from 'react-router-dom';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './Register.module.scss';
 import { useState } from 'react';
@@ -17,6 +19,7 @@ function RegisterForm({ onClose, switchToLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -50,6 +53,7 @@ function RegisterForm({ onClose, switchToLogin }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const response = await authRegister.register(username, password);
             console.log('Register successful:', response);
@@ -58,10 +62,12 @@ function RegisterForm({ onClose, switchToLogin }) {
                 localStorage.setItem('token', response.meta.token);
             }
 
+            setLoading(false);
             handleRegisterSuccess();
 
             navigate('/');
         } catch (err) {
+            setLoading(false);
             setError('Failed to register. Please check your credentials.');
             console.error('Register error:', err);
         }
@@ -113,12 +119,21 @@ function RegisterForm({ onClose, switchToLogin }) {
                         </p>
                     )}
 
-                    <Button
-                        outline={!!username && !!password}
-                        disable={!username || !password}
-                    >
-                        Register
-                    </Button>
+                    <div className={cx('btn-register')}>
+                        <Button
+                            primary={!!username && !!password}
+                            disable={!username || !password}
+                            rounded
+                            className={cx('btn-icon')}
+                        >
+                            Register
+                        </Button>
+                        {loading && (
+                            <div className={cx('loading')}>
+                                <FontAwesomeIcon icon={faSpinner} className={cx('loading-icon')} />
+                            </div>
+                        )}
+                    </div>
                 </form>
             </div>
 
@@ -130,7 +145,6 @@ function RegisterForm({ onClose, switchToLogin }) {
                     </strong>{' '}
                 </p>
             </div>
-            <Toaster />
         </>
     );
 }

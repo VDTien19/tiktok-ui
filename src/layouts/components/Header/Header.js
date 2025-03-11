@@ -14,7 +14,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 // import { toast } from 'react-toastify';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 import styles from './Header.module.scss';
 import images from '~/assets/images';
@@ -298,7 +298,6 @@ function Header() {
                         )}
                     </div>
                 </div>
-                <Toaster />
             </header>
             {showAuthModal && (
                 <AuthModal isOpen={showAuthModal} onClose={handleCloseModal} />

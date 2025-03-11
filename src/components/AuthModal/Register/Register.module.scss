@@ -71,4 +71,45 @@
 .sign-up {
     cursor: pointer;
     color: var(--primary);
+    text-decoration: underline;
+}
+
+.btn-register {
+    width: 200px;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+
+    .btn-icon {
+        width: 200px;
+    }
+
+    .loading {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #70717a1f;
+        border-radius: 999px;
+
+        .loading-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: spinner 1s linear infinite;
+        }
+    }
+}
+
+@keyframes spinner {
+    from {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
 }
